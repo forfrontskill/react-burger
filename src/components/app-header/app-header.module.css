@@ -1,0 +1,10 @@
+.AppHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    margin: 0;
+    border: 1px solid red;
+    background-color: #1C1C21;
+    padding: 16px 0;
+}
