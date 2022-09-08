@@ -1,0 +1,10 @@
+.Container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 0 16px 0;
+}
+
+.Container:last-child {
+    margin: 0;
+}

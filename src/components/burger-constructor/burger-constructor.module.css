@@ -1,3 +1,46 @@
 .BurgerConstructor {
-    border: 1px solid blue;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    max-width: 600px;
+    padding: 100px 16px 52px;
+}
+
+.SubmitContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.Image {
+    padding: 0 40px 0 0;
+}
+
+.Price {
+    padding: 0 8px 0 0;
+}
+
+.Recipes {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    overflow-y: scroll;
+    margin: 0 0 40px 0;
+    border-radius: 52px;
+}
+
+.Recipes::-webkit-scrollbar {
+    width: 8px;
+}
+
+.Recipes::-webkit-scrollbar-track {
+    background: #2F2F37;
+    margin-bottom: 96px;
+    margin-top: 96px;
+}
+
+.Recipes::-webkit-scrollbar-thumb {
+    background-color: #8585AD;
 }

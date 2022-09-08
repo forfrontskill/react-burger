@@ -1,0 +1,26 @@
+.BurgerIngredient {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 272px;
+    max-height: 208px;
+    margin: 24px 24px 32px 16px;
+}
+
+.Image {
+    max-width: 240px;
+    max-height: 120px;
+    padding: 0 16px 4px;
+}
+
+.Price {
+    display: inline-flex;
+    align-items: center;
+}
+
+.Name {
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}

@@ -2,14 +2,10 @@ import React from "react";
 
 import style from './menu-button.module.css';
 
-const MenuButton = ({icon, text='', type='inactive'}) => {
+const MenuButton = ({icon, text='', type='inactive', onClick=()=>{}}) => {
 
-    const onClick = () => {
-        console.log('Push');
-    }
-
-    const iconType = type === 'inactive' ? 'primary' : 'secondary';
-    const textType = type === 'inactive' ? 'text_color_primary' : 'text_color_inactive';
+    const iconType = type === 'inactive' ? 'secondary' : 'primary';
+    const textType = type === 'inactive' ? 'text_color_inactive' : 'text_color_primary';
 
     const iconWithClass = React.cloneElement(icon, {type: iconType});
 
