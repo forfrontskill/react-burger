@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Tab} from "@ya.praktikum/react-developer-burger-ui-components";
-import Title from "../../title/title";
+import Title from "../title/title";
 import BurgerIngredientsGroup from "../burger-ingredients-group/burger-ingredients-group";
 
 import style from './burger-ingredients.module.css';
 
-import { requestData } from '../../utils/data';
-import { ingredientFilter } from '../../utils/utils';
+import { requestData } from '../utils/data';
+import { ingredientFilter } from '../utils/utils';
 
 const BurgerIngredients = () => {
     const [current, setCurrent] = useState('bun');

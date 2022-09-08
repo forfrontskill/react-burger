@@ -3,8 +3,8 @@ import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import KrisatlIcon from '../../images/kristal_icon.svg';
 
 import style from './burger-constructor.module.css';
-import BurgerConstructorElement from "../../burger-constructor-element/burger-constructor-element";
-import { requestData } from '../../utils/data';
+import BurgerConstructorElement from "../burger-constructor-element/burger-constructor-element";
+import { requestData } from '../utils/data';
 
 const BurgerConstructor = ({ price = 12 }) => {
     const list = requestData;
