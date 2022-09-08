@@ -1,9 +1,12 @@
 import React from "react";
+import PropTypes from 'prop-types';
+
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import KrisatlIcon from '../../images/kristal_icon.svg';
+import BurgerConstructorElement from "../burger-constructor-element/burger-constructor-element";
 
 import style from './burger-constructor.module.css';
-import BurgerConstructorElement from "../burger-constructor-element/burger-constructor-element";
+
 import { requestData } from '../utils/data';
 
 const BurgerConstructor = ({ price = 12 }) => {
@@ -12,7 +15,7 @@ const BurgerConstructor = ({ price = 12 }) => {
         <section className={style.BurgerConstructor}>
 
             <div className={style.Recipes}>
-                {list.map((burgerElement, index,array) => {
+                {list.map((burgerElement, index) => {
                     if (index === 0) {
                         
                         return <BurgerConstructorElement
@@ -51,5 +54,9 @@ const BurgerConstructor = ({ price = 12 }) => {
         </section>
     )
 };
+
+BurgerConstructor.propTypes = {
+    price: PropTypes.number
+}
 
 export default BurgerConstructor;

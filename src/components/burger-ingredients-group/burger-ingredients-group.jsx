@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from 'prop-types';
+
 import BurgerIngredient from "../burger-ingredient/burger-ingredient";
 
 import style from './burger-ingredients-group.module.css';
@@ -12,6 +14,12 @@ const BurgerIngredientsGroup = ({title,list,refProp}) => {
             </div>
         </>
     )
+}
+
+BurgerIngredientsGroup.propTypes = {
+    title: PropTypes.string.isRequired,
+    list: PropTypes.array.isRequired,
+    refProp: PropTypes.object
 }
 
 export default BurgerIngredientsGroup;
