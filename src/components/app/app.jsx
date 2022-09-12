@@ -4,6 +4,7 @@ import AppHeader from '../../components/app-header/app-header';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
 import Content from '../../components/content/content';
+import ModalOverlay from "../modal-overlay/modal-overlay";
 
 const baseUrl = 'https://norma.nomoreparties.space/api/ingredients';
 

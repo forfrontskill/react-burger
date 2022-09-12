@@ -8,8 +8,12 @@ import BurgerIngredientsGroup from "../burger-ingredients-group/burger-ingredien
 import style from './burger-ingredients.module.css';
 
 import { ingredientFilter } from '../utils/utils';
+import IngredientDetails from "../ingredient-details/ingredient-details";
 
 const BurgerIngredients = ({ ingredients = [] }) => {
+
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [modalIngredient, setModalIngredient] = useState({});
     const [current, setCurrent] = useState('bun');
     const [anchors, setAnchors] = useState({});
 
@@ -28,6 +32,15 @@ const BurgerIngredients = ({ ingredients = [] }) => {
 
     const mainList = ingredientFilter(ingredients);
 
+    const handleModalOpen = (ingredient) => () => {
+        console.log(ingredient);
+        setModalIngredient(ingredient);
+        setModalOpen(true);
+    }
+    const handleModalClose = () => {
+        setModalOpen(false);
+    }
+
     return (
         <section className={style.BurgerIngredients}>
             <Title text='Соберите бургер' />
@@ -44,10 +57,11 @@ const BurgerIngredients = ({ ingredients = [] }) => {
             </div>
 
             <div className={style.BurgerIngredientsList}>
-                <BurgerIngredientsGroup list={mainList.bun} title='Булки' refProp={refBun} />
-                <BurgerIngredientsGroup list={mainList.main} title='Начинки' refProp={refMain} />
-                <BurgerIngredientsGroup list={mainList.sauce} title='Соусы' refProp={refSauce} />
+                <BurgerIngredientsGroup list={mainList.bun} title='Булки' refProp={refBun} onClick={handleModalOpen}/>
+                <BurgerIngredientsGroup list={mainList.main} title='Начинки' refProp={refMain} onClick={handleModalOpen}/>
+                <BurgerIngredientsGroup list={mainList.sauce} title='Соусы' refProp={refSauce} onClick={handleModalOpen}/>
             </div>
+            <IngredientDetails isOpen={isModalOpen} onClose={handleModalClose} ingredient={modalIngredient}/>
         </section>
     )
 };

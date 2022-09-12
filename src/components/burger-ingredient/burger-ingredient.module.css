@@ -6,6 +6,7 @@
     max-width: 272px;
     max-height: 208px;
     margin: 24px 24px 32px 16px;
+    cursor: pointer;
 }
 
 .Image {

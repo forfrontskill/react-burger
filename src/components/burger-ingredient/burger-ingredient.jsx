@@ -5,10 +5,10 @@ import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-c
 
 import style from './burger-ingredient.module.css';
 
-const BurgerIngredient = ({image, price, count, name}) => {
-
+const BurgerIngredient = ({ingredient, onClick}) => {
+    const {image, price, count, name,} = ingredient;
     return (
-        <div className={style.BurgerIngredient}>
+        <div className={style.BurgerIngredient} onClick={onClick(ingredient)}>
             <img className={style.Image} src={image}/>
             <span className={'text text_type_digits-default ' + style.Price}>
                     {price}
