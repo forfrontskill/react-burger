@@ -7,15 +7,13 @@ import BurgerConstructorElement from "../burger-constructor-element/burger-const
 
 import style from './burger-constructor.module.css';
 
-import { requestData } from '../utils/data';
+const BurgerConstructor = ({ingredients =[], price = 12 }) => {
 
-const BurgerConstructor = ({ price = 12 }) => {
-    const list = requestData;
     return (
         <section className={style.BurgerConstructor}>
 
             <div className={style.Recipes}>
-                {list.map((burgerElement, index) => {
+                {ingredients.map((burgerElement, index) => {
                     if (index === 0) {
                         
                         return <BurgerConstructorElement
@@ -25,7 +23,7 @@ const BurgerConstructor = ({ price = 12 }) => {
                             thumbnail={burgerElement.image}
                             type='top'
                         />;
-                    } else if (index === (list.length - 1)) {
+                    } else if (index === (ingredients.length - 1)) {
                         return <BurgerConstructorElement
                             key={burgerElement._id}
                             text={burgerElement.name}
@@ -56,6 +54,7 @@ const BurgerConstructor = ({ price = 12 }) => {
 };
 
 BurgerConstructor.propTypes = {
+    ingredients: PropTypes.array,
     price: PropTypes.number
 }
 

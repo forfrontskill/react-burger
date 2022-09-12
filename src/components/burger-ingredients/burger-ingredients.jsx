@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Tab} from "@ya.praktikum/react-developer-burger-ui-components";
+import PropTypes from 'prop-types';
+
+import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import Title from "../title/title";
 import BurgerIngredientsGroup from "../burger-ingredients-group/burger-ingredients-group";
 
 import style from './burger-ingredients.module.css';
 
-import { requestData } from '../utils/data';
 import { ingredientFilter } from '../utils/utils';
 
-const BurgerIngredients = () => {
+const BurgerIngredients = ({ ingredients = [] }) => {
     const [current, setCurrent] = useState('bun');
     const [anchors, setAnchors] = useState({});
 
@@ -18,14 +19,14 @@ const BurgerIngredients = () => {
 
     useEffect(() => {
         setAnchors({ ...anchors, bun: refBun, main: refMain, sauce: refSauce });
-    },[]);
+    }, []);
 
     const handleClickAnchor = (key) => (event) => {
         setCurrent(key);
         anchors[key].current.scrollIntoView({ behavior: 'smooth', block: 'start' });;
     }
 
-    const mainList = ingredientFilter(requestData);
+    const mainList = ingredientFilter(ingredients);
 
     return (
         <section className={style.BurgerIngredients}>
@@ -50,5 +51,9 @@ const BurgerIngredients = () => {
         </section>
     )
 };
+
+BurgerIngredients.propTypes = {
+    ingredients: PropTypes.array
+}
 
 export default BurgerIngredients;
