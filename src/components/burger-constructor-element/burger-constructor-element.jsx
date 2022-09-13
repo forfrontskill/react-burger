@@ -4,7 +4,7 @@ import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burg
 
 import style from './burger-constructor-element.module.css';
 
-const BurgerConstructorElement = ({text,price,thumbnail,isLocked=true,type}) => {
+const BurgerConstructorElement = ({ text, price, thumbnail, isLocked = true, type }) => {
     return (
         <div className={style.Container}>
             <DragIcon type="primary" />

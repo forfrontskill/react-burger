@@ -23,6 +23,7 @@ const BurgerIngredients = ({ ingredients = [] }) => {
 
     useEffect(() => {
         setAnchors({ ...anchors, bun: refBun, main: refMain, sauce: refSauce });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleClickAnchor = (key) => (event) => {
@@ -33,7 +34,6 @@ const BurgerIngredients = ({ ingredients = [] }) => {
     const mainList = ingredientFilter(ingredients);
 
     const handleModalOpen = (ingredient) => () => {
-        console.log(ingredient);
         setModalIngredient(ingredient);
         setModalOpen(true);
     }

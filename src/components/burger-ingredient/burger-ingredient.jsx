@@ -5,11 +5,11 @@ import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-c
 
 import style from './burger-ingredient.module.css';
 
-const BurgerIngredient = ({ingredient, onClick}) => {
+const BurgerIngredient = ({ingredient, onClick=()=>{}}) => {
     const {image, price, count, name,} = ingredient;
     return (
         <div className={style.BurgerIngredient} onClick={onClick(ingredient)}>
-            <img className={style.Image} src={image}/>
+            <img className={style.Image} src={image} alt='Изображение ингредиента'/>
             <span className={'text text_type_digits-default ' + style.Price}>
                     {price}
                     <CurrencyIcon type="primary"/>
@@ -21,10 +21,8 @@ const BurgerIngredient = ({ingredient, onClick}) => {
 }
 
 BurgerIngredient.propTypes = {
-    image: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    count: PropTypes.number,
-    name: PropTypes.string.isRequired
+    ingredient: PropTypes.object.isRequired,
+    onClick: PropTypes.func
 }
 
 export default BurgerIngredient;
