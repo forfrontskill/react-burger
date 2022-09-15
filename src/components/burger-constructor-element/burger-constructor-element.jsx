@@ -4,10 +4,10 @@ import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burg
 
 import style from './burger-constructor-element.module.css';
 
-const BurgerConstructorElement = ({ text, price, thumbnail, isLocked = true, type }) => {
+const BurgerConstructorElement = ({ text, price, thumbnail, isLocked, type }) => {
     return (
         <div className={style.Container}>
-            <DragIcon type="primary" />
+            {!isLocked && <DragIcon type="primary" />}
             <ConstructorElement
                 type={type}
                 isLocked={isLocked}
@@ -23,7 +23,7 @@ BurgerConstructorElement.propTypes = {
     text: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     thumbnail: PropTypes.string.isRequired,
-    isLocked: PropTypes.bool,
+    isLocked: PropTypes.bool.isRequired,
     type: PropTypes.string
 }
 

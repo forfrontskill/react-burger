@@ -4,24 +4,26 @@ import AppHeader from '../../components/app-header/app-header';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
 import Content from '../../components/content/content';
-import ModalOverlay from "../modal-overlay/modal-overlay";
+import { getIngredients } from '../../utils/burger-api'
 
-const baseUrl = 'https://norma.nomoreparties.space/api/ingredients';
 
 const App = () => {
 
     const [isFetching, setFetching] = useState(false);
     const [ingredients, setIngredients] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
-        fetch(baseUrl)
-            .then(res => res.json())
+        getIngredients()
             .then(({ data }) => {
                 setIngredients(data);
-                setFetching(true);
             })
             .catch(err => {
                 console.log('Ошибка получения данных:', err);
+                setErrorMessage(err);
+            })
+            .finally(() => {
+                setFetching(true);
             })
     }, [])
 
@@ -31,8 +33,14 @@ const App = () => {
             <Content>
                 {isFetching ? (
                     <>
-                        <BurgerIngredients ingredients={ingredients}/>
-                        <BurgerConstructor ingredients={ingredients}/>
+                        {errorMessage ? (
+                            <p>{errorMessage}</p>
+                        ) : (
+                            <>
+                                <BurgerIngredients ingredients={ingredients} />
+                                <BurgerConstructor ingredients={ingredients} price={12}/>
+                            </>
+                        )}
                     </>
                 ) : (
                     <p>ЗАГРУЗКА....</p>

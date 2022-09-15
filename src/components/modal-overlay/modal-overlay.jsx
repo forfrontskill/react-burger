@@ -7,21 +7,23 @@ import style from './modal-overlay.module.css';
 
 const modalRoot = document.getElementById('react-modals');
 
-const ModalOverlay = ({ title, isOpen=false, onClose = () => { }, children }) => {
+const ModalOverlay = ({ title, onClose, children }) => {
 
-    const handleEscape = (evt) => {
-        if (evt.key === 'Escape') {
-            onClose();
-        }
-    }
+    
 
     useEffect(() => {
-        document.addEventListener('keydown', handleEscape);
-        return () => {
-            document.removeEventListener('keydown', handleEscape);
+        const eventEscKey = (evt) => {
+            if (evt.key === 'Escape') {
+                onClose();
+            }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+
+        document.addEventListener('keydown', eventEscKey);
+        return () => {
+            document.removeEventListener('keydown', eventEscKey);
+        }
+
+    }, [onClose])
 
     const modal = (
         <div className={style.ModalOverlay}>
@@ -33,13 +35,12 @@ const ModalOverlay = ({ title, isOpen=false, onClose = () => { }, children }) =>
         </div>
     )
 
-    return isOpen ? ReactDOM.createPortal(modal, modalRoot) : <></>
+    return ReactDOM.createPortal(modal, modalRoot)
 }
 
 ModalOverlay.propTypes = {
-    title: PropTypes.string,
-    isOpen: PropTypes.bool,
-    onClose: PropTypes.func,
+    title: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired,
     children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node

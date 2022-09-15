@@ -4,12 +4,13 @@ import IngredientDetailsCalorie from "../ingredient-details-calorie/ingredient-d
 import ModalOverlay from "../modal-overlay/modal-overlay";
 
 import style from './ingredient-details.module.css';
+import { IngredientType } from "../../utils/objects";
 
 
-const IngredientDetails = ({ isOpen=false, onClose=()=>{}, ingredient }) => {
+const IngredientDetails = ({ onClose, ingredient }) => {
     const { image_large:image, name, calories, carbohydrates, fat, proteins } = ingredient;
     return (
-        <ModalOverlay isOpen={isOpen} onClose={onClose} title='Детали ингредиента'>
+        <ModalOverlay onClose={onClose} title='Детали ингредиента'>
             <div className={style.IngredientDetails}>
                 <img className={style.Image} src={image} alt='Изображение ингредиента'/>
                 <p className={'text text_type_main-medium ' + style.Title}>{name}</p>
@@ -25,9 +26,8 @@ const IngredientDetails = ({ isOpen=false, onClose=()=>{}, ingredient }) => {
 };
 
 IngredientDetails.propTypes = {
-    isOpen: PropTypes.bool,
-    onClose: PropTypes.func,
-    ingredient: PropTypes.object
+    onClose: PropTypes.func.isRequired,
+    ingredient: IngredientType
 }
 
 export default IngredientDetails;

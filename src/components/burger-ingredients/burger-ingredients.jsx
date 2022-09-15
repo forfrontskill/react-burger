@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState,useMemo } from "react";
 import PropTypes from 'prop-types';
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -7,31 +7,23 @@ import BurgerIngredientsGroup from "../burger-ingredients-group/burger-ingredien
 
 import style from './burger-ingredients.module.css';
 
-import { ingredientFilter } from '../utils/utils';
+import { ingredientFilter } from '../../utils/utils';
 import IngredientDetails from "../ingredient-details/ingredient-details";
+import { IngredientType } from "../../utils/objects";
 
-const BurgerIngredients = ({ ingredients = [] }) => {
+const BurgerIngredients = ({ ingredients }) => {
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [modalIngredient, setModalIngredient] = useState({});
     const [current, setCurrent] = useState('bun');
-    const [anchors, setAnchors] = useState({});
 
-    const refBun = useRef();
-    const refMain = useRef();
-    const refSauce = useRef();
-
-    useEffect(() => {
-        setAnchors({ ...anchors, bun: refBun, main: refMain, sauce: refSauce });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const handleClickAnchor = (key) => (event) => {
+    const handleClickAnchor = (key) => {
         setCurrent(key);
-        anchors[key].current.scrollIntoView({ behavior: 'smooth', block: 'start' });;
+        const element = document.getElementById(key);
+        if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });;
     }
 
-    const mainList = ingredientFilter(ingredients);
+    const mainList = useMemo(()=>ingredientFilter(ingredients),[ingredients]);
 
     const handleModalOpen = (ingredient) => () => {
         setModalIngredient(ingredient);
@@ -45,29 +37,29 @@ const BurgerIngredients = ({ ingredients = [] }) => {
         <section className={style.BurgerIngredients}>
             <Title text='Соберите бургер' />
             <div className={style.TabGroup}>
-                <Tab value="bun" active={current === 'bun'} onClick={handleClickAnchor('bun')}>
+                <Tab value="bun" active={current === 'bun'} onClick={handleClickAnchor}>
                     Булки
                 </Tab>
-                <Tab value="sauce" active={current === 'sauce'} onClick={handleClickAnchor('sauce')}>
+                <Tab value="sauce" active={current === 'sauce'} onClick={handleClickAnchor}>
                     Соусы
                 </Tab>
-                <Tab value="main" active={current === 'main'} onClick={handleClickAnchor('main')}>
+                <Tab value="main" active={current === 'main'} onClick={handleClickAnchor}>
                     Начинки
                 </Tab>
             </div>
 
             <div className={style.BurgerIngredientsList}>
-                <BurgerIngredientsGroup list={mainList.bun} title='Булки' refProp={refBun} onClick={handleModalOpen}/>
-                <BurgerIngredientsGroup list={mainList.main} title='Начинки' refProp={refMain} onClick={handleModalOpen}/>
-                <BurgerIngredientsGroup list={mainList.sauce} title='Соусы' refProp={refSauce} onClick={handleModalOpen}/>
+                <BurgerIngredientsGroup id='bun' list={mainList.bun} title='Булки' onClick={handleModalOpen}/>
+                <BurgerIngredientsGroup id='main' list={mainList.main} title='Начинки' onClick={handleModalOpen}/>
+                <BurgerIngredientsGroup id='sauce' list={mainList.sauce} title='Соусы' onClick={handleModalOpen}/>
             </div>
-            <IngredientDetails isOpen={isModalOpen} onClose={handleModalClose} ingredient={modalIngredient}/>
+            {isModalOpen && <IngredientDetails onClose={handleModalClose} ingredient={modalIngredient}/>}
         </section>
     )
 };
 
 BurgerIngredients.propTypes = {
-    ingredients: PropTypes.array
+    ingredients: PropTypes.arrayOf(IngredientType).isRequired
 }
 
 export default BurgerIngredients;

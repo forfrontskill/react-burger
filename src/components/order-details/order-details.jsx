@@ -6,9 +6,9 @@ import doneOrderIcon from '../../images/done_order_icon.svg';
 import style from './order-details.module.css';
 
 
-const OrderDetails = ({ isOpen = false, onClose = () => { } }) => {
+const OrderDetails = ({ onClose}) => {
     return (
-        <ModalOverlay isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay onClose={onClose}>
             <div className={style.OrderDetails}>
                 <p className={'text text_type_digits-large ' + style.Number}>034536</p>
                 <p className='text text_type_main-medium'>идентификатор заказа</p>
@@ -21,8 +21,7 @@ const OrderDetails = ({ isOpen = false, onClose = () => { } }) => {
 }
 
 OrderDetails.propTypes = {
-    isOpen: PropTypes.bool,
-    onClose: PropTypes.func
+    onClose: PropTypes.func.isRequired
 }
 
 export default OrderDetails;

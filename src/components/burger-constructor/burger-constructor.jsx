@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import PropTypes from 'prop-types';
 
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -7,8 +7,9 @@ import BurgerConstructorElement from "../burger-constructor-element/burger-const
 
 import style from './burger-constructor.module.css';
 import OrderDetails from "../order-details/order-details";
+import { IngredientType } from "../../utils/objects";
 
-const BurgerConstructor = ({ingredients =[], price = 12 }) => {
+const BurgerConstructor = ({ ingredients, price = 0 }) => {
 
     const [isOpenModal, setOpenModal] = useState(false);
 
@@ -19,54 +20,60 @@ const BurgerConstructor = ({ingredients =[], price = 12 }) => {
     const handleCloseOrderModal = () => {
         setOpenModal(false);
     }
+    
+    const ingredientWithoutBuns = useMemo(() => ingredients.filter((ingredient) => ingredient.type !== 'bun'), [ingredients]);
+    const buns = useMemo(() => ingredients.filter((ingredient) => ingredient.type === 'bun'), [ingredients]);
+    const bottom = buns[0];
+    const top = buns[1];
 
     return (
         <section className={style.BurgerConstructor}>
-
             <div className={style.Recipes}>
-                {ingredients.map((burgerElement, index) => {
-                    if (index === 0) {
-                        
-                        return <BurgerConstructorElement
-                            key={burgerElement._id}
-                            text={burgerElement.name}
-                            price={burgerElement.price}
-                            thumbnail={burgerElement.image}
-                            type='top'
-                        />;
-                    } else if (index === (ingredients.length - 1)) {
-                        return <BurgerConstructorElement
-                            key={burgerElement._id}
-                            text={burgerElement.name}
-                            price={burgerElement.price}
-                            thumbnail={burgerElement.image}
-                            type='bottom'
-                        />;
-                    }
-
+                {top && (
+                    <BurgerConstructorElement
+                        key={top._id}
+                        text={top.name}
+                        price={top.price}
+                        thumbnail={top.image}
+                        isLocked={true}
+                        type='top'
+                    />
+                )}
+                {ingredientWithoutBuns.map((burgerElement) => {
                     return <BurgerConstructorElement
                         key={burgerElement._id}
                         text={burgerElement.name}
                         price={burgerElement.price}
                         thumbnail={burgerElement.image}
+                        isLocked={false}
                     />;
                 })}
+                {bottom && (
+                    <BurgerConstructorElement
+                        key={bottom._id}
+                        text={bottom.name}
+                        price={bottom.price}
+                        thumbnail={bottom.image}
+                        isLocked={true}
+                        type='bottom'
+                    />
+                )}
             </div>
 
             <div className={style.SubmitContainer}>
                 <p className={"text text_type_digits-medium " + style.Price}>{price}</p>
-                <img className={style.Image} src={KrisatlIcon} alt='Иконка символа кристалла (виртуальная валюта)'/>
+                <img className={style.Image} src={KrisatlIcon} alt='Иконка символа кристалла (виртуальная валюта)' />
                 <Button type="primary" size="large" onClick={handelCreateOrder}>
                     Оформить заказ
                 </Button>
             </div>
-            <OrderDetails isOpen={isOpenModal} onClose={handleCloseOrderModal}/>
+            {isOpenModal && <OrderDetails onClose={handleCloseOrderModal} />}
         </section>
     )
 };
 
 BurgerConstructor.propTypes = {
-    ingredients: PropTypes.array,
+    ingredients: PropTypes.arrayOf(IngredientType).isRequired,
     price: PropTypes.number
 }
 

@@ -13,8 +13,8 @@ const IngredientDetailsCalorie = ({title, value}) => {
 }
 
 IngredientDetailsCalorie.propTypes = {
-    title: PropTypes.string,
-    value: PropTypes.number
+    title: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired
 }
 
 export default IngredientDetailsCalorie;

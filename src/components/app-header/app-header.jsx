@@ -10,12 +10,12 @@ const AppHeader = () => {
     return (
         <nav className={style.AppHeader}>
             <div>
-                <MenuButton icon={<BurgerIcon />} text={'Конструктор'} type='active'/>
-                <MenuButton icon={<ListIcon />} text={'Лента заказов'} type='inactive'/>
+                <MenuButton icon={<BurgerIcon />} text={'Конструктор'} type='active' onClick={()=>{}}/>
+                <MenuButton icon={<ListIcon />} text={'Лента заказов'} type='inactive' onClick={()=>{}}/>
             </div>
 
             <Logo />
-            <MenuButton icon={<MenuIcon />} text={'Личный кабинет'} type='inactive'/>
+            <MenuButton icon={<MenuIcon />} text={'Личный кабинет'} type='inactive' onClick={()=>{}}/>
         </nav>
     )
 }
