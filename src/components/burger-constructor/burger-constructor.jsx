@@ -20,25 +20,25 @@ const BurgerConstructor = ({ ingredients, price = 0 }) => {
     const handleCloseOrderModal = () => {
         setOpenModal(false);
     }
-    
+
     const ingredientWithoutBuns = useMemo(() => ingredients.filter((ingredient) => ingredient.type !== 'bun'), [ingredients]);
-    const buns = useMemo(() => ingredients.filter((ingredient) => ingredient.type === 'bun'), [ingredients]);
-    const bottom = buns[0];
-    const top = buns[1];
+    const bun = useMemo(() => ingredients.find((ingredient) => ingredient.type === 'bun'), [ingredients]);
 
     return (
         <section className={style.BurgerConstructor}>
-            <div className={style.Recipes}>
-                {top && (
+            {bun && (
+                <div className={style.RecipeFix}>
                     <BurgerConstructorElement
-                        key={top._id}
-                        text={top.name}
-                        price={top.price}
-                        thumbnail={top.image}
+                        key={bun._id + 'top'}
+                        text={bun.name}
+                        price={bun.price}
+                        thumbnail={bun.image}
                         isLocked={true}
                         type='top'
                     />
-                )}
+                </div>
+            )}
+            <div className={style.Recipes}>
                 {ingredientWithoutBuns.map((burgerElement) => {
                     return <BurgerConstructorElement
                         key={burgerElement._id}
@@ -48,17 +48,19 @@ const BurgerConstructor = ({ ingredients, price = 0 }) => {
                         isLocked={false}
                     />;
                 })}
-                {bottom && (
+            </div>
+            {bun && (
+                <div className={style.RecipeFix}>
                     <BurgerConstructorElement
-                        key={bottom._id}
-                        text={bottom.name}
-                        price={bottom.price}
-                        thumbnail={bottom.image}
+                        key={bun._id + 'bottom'}
+                        text={bun.name}
+                        price={bun.price}
+                        thumbnail={bun.image}
                         isLocked={true}
                         type='bottom'
                     />
-                )}
-            </div>
+                </div>
+            )}
 
             <div className={style.SubmitContainer}>
                 <p className={"text text_type_digits-medium " + style.Price}>{price}</p>

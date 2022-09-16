@@ -22,7 +22,7 @@ const BurgerIngredient = ({ingredient, onClick}) => {
 }
 
 BurgerIngredient.propTypes = {
-    ingredient: IngredientType,
+    ingredient: IngredientType.isRequired,
     onClick: PropTypes.func.isRequired
 }
 
