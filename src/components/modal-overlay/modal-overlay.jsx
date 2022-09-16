@@ -7,10 +7,16 @@ import style from './modal-overlay.module.css';
 
 const modalRoot = document.getElementById('react-modals');
 
-const ModalOverlay = ({ children }) => {
+const ModalOverlay = ({ onClick, children }) => {
+
+    const overlayClick = (evt) => {
+        if(evt.target.className === style.ModalOverlay){
+            onClick();
+        }
+    }
 
     const modal = (
-        <div className={style.ModalOverlay}>
+        <div className={style.ModalOverlay} onMouseDown={overlayClick}>
             {children}
         </div>
     )
@@ -19,6 +25,7 @@ const ModalOverlay = ({ children }) => {
 }
 
 ModalOverlay.propTypes = {
+    onClick: PropTypes.func.isRequired,
     children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.node),
         PropTypes.node

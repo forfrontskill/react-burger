@@ -1,35 +1,36 @@
 .Container {
-position: relative;
-box-sizing: border-box;
-margin: auto auto;
-width: 720px;
-background-color: #1C1C21;
-border-radius: 40px;
+    position: relative;
+    box-sizing: border-box;
+    margin: auto auto;
+    width: 720px;
+    background-color: #1C1C21;
+    border-radius: 40px;
+    z-index: 2;
 }
 
 .ButtonClose {
-display: block;
-position: absolute;
-right: 40px;
-top: 48px;
-width: 24px;
-height: 24px;
-cursor: pointer;
-background-color: transparent;
-border: none;
-background-image: url("../../images/close_icon.svg");
-background-size: auto;
-background-repeat: no-repeat;
-background-position: center;
+    display: block;
+    position: absolute;
+    right: 40px;
+    top: 48px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    background-image: url("../../images/close_icon.svg");
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .Title {
-display: block;
-margin: 40px 0 0 40px;
+    display: block;
+    margin: 40px 0 0 40px;
 }
 
 .Test {
-width: 100px;
-height: 100px;
-padding: 35px;
+    width: 100px;
+    height: 100px;
+    padding: 35px;
 }
