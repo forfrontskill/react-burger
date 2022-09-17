@@ -1,0 +1,10 @@
+.BurgerIngredientsGroup {
+    display: grid;
+    grid-template-columns: auto auto;
+    margin: 0;
+    padding: 0;
+}
+
+.GroupTitle {
+    display: inline-block;
+}

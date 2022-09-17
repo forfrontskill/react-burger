@@ -1,0 +1,15 @@
+.MenuButton {
+    display: inline-flex;
+    align-items: flex-end;
+    padding: 16px 20px;
+    background: none;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    margin: 0 8px 0 0;
+    text-decoration: none;
+}
+
+.Text {
+    margin: 0 0 0 8px;
+}
