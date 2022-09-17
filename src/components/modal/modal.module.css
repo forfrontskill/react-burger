@@ -1,11 +1,15 @@
 .Container {
-    position: relative;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    margin: auto;
+    transform: translate(-50%, -50%);
     box-sizing: border-box;
-    margin: auto auto;
     width: 720px;
     background-color: #1C1C21;
     border-radius: 40px;
-    z-index: 2;
+    
 }
 
 .ButtonClose {
