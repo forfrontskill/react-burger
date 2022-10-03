@@ -4,7 +4,8 @@ import AppHeader from '../../components/app-header/app-header';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
 import Content from '../../components/content/content';
-import { getIngredients } from '../../utils/burger-api'
+import { getIngredients } from '../../utils/burger-api';
+import { IngredientsContext } from "../../services/appContext";
 
 
 const App = () => {
@@ -30,22 +31,24 @@ const App = () => {
     return (
         <>
             <AppHeader />
-            <Content>
-                {isFetching ? (
-                    <>
-                        {errorMessage ? (
-                            <p>{errorMessage}</p>
-                        ) : (
-                            <>
-                                <BurgerIngredients ingredients={ingredients} />
-                                <BurgerConstructor ingredients={ingredients} price={12}/>
-                            </>
-                        )}
-                    </>
-                ) : (
-                    <p>ЗАГРУЗКА....</p>
-                )}
-            </Content>
+            <IngredientsContext.Provider value={ingredients}>
+                <Content>
+                    {isFetching ? (
+                        <>
+                            {errorMessage ? (
+                                <p>{errorMessage}</p>
+                            ) : (
+                                <>
+                                    <BurgerIngredients />
+                                    <BurgerConstructor />
+                                </>
+                            )}
+                        </>
+                    ) : (
+                        <p>ЗАГРУЗКА....</p>
+                    )}
+                </Content>
+            </IngredientsContext.Provider>
         </>
     )
 }

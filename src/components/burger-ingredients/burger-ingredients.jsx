@@ -1,5 +1,4 @@
-import React, { useState,useMemo } from "react";
-import PropTypes from 'prop-types';
+import React, { useState,useMemo, useContext } from "react";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import Title from "../title/title";
@@ -10,8 +9,11 @@ import style from './burger-ingredients.module.css';
 import { ingredientFilter } from '../../utils/utils';
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import { IngredientType } from "../../utils/objects";
+import { IngredientsContext } from "../../services/appContext";
 
-const BurgerIngredients = ({ ingredients }) => {
+const BurgerIngredients = () => {
+    
+    const ingredients = useContext(IngredientsContext)
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [modalIngredient, setModalIngredient] = useState({});
@@ -58,8 +60,5 @@ const BurgerIngredients = ({ ingredients }) => {
     )
 };
 
-BurgerIngredients.propTypes = {
-    ingredients: PropTypes.arrayOf(IngredientType).isRequired
-}
 
 export default BurgerIngredients;
