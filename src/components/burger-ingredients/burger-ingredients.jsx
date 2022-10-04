@@ -1,18 +1,18 @@
-import React, { useState,useMemo, useContext } from "react";
+import React, { useState, useMemo, useContext } from "react";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import Title from "../title/title";
+import Modal from "../modal/modal";
 import BurgerIngredientsGroup from "../burger-ingredients-group/burger-ingredients-group";
 
 import style from './burger-ingredients.module.css';
 
 import { ingredientFilter } from '../../utils/utils';
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import { IngredientType } from "../../utils/objects";
 import { IngredientsContext } from "../../services/appContext";
 
 const BurgerIngredients = () => {
-    
+
     const ingredients = useContext(IngredientsContext)
 
     const [isModalOpen, setModalOpen] = useState(false);
@@ -25,7 +25,7 @@ const BurgerIngredients = () => {
         if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });;
     }
 
-    const mainList = useMemo(()=>ingredientFilter(ingredients),[ingredients]);
+    const mainList = useMemo(() => ingredientFilter(ingredients), [ingredients]);
 
     const handleModalOpen = (ingredient) => () => {
         setModalIngredient(ingredient);
@@ -51,11 +51,15 @@ const BurgerIngredients = () => {
             </div>
 
             <div className={style.BurgerIngredientsList}>
-                <BurgerIngredientsGroup id='bun' list={mainList.bun} title='Булки' onClick={handleModalOpen}/>
-                <BurgerIngredientsGroup id='main' list={mainList.main} title='Начинки' onClick={handleModalOpen}/>
-                <BurgerIngredientsGroup id='sauce' list={mainList.sauce} title='Соусы' onClick={handleModalOpen}/>
+                <BurgerIngredientsGroup id='bun' list={mainList.bun} title='Булки' onClick={handleModalOpen} />
+                <BurgerIngredientsGroup id='main' list={mainList.main} title='Начинки' onClick={handleModalOpen} />
+                <BurgerIngredientsGroup id='sauce' list={mainList.sauce} title='Соусы' onClick={handleModalOpen} />
             </div>
-            {isModalOpen && <IngredientDetails onClose={handleModalClose} ingredient={modalIngredient}/>}
+            {isModalOpen &&
+                <Modal onClose={handleModalClose} title='Детали ингредиента'>
+                    <IngredientDetails ingredient={modalIngredient} />
+                </Modal>
+            }
         </section>
     )
 };

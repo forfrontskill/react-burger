@@ -24,7 +24,7 @@ const Modal = ({ title, onClose, children }) => {
     }, [onClose])
 
     const modal = (
-        <>
+        <>  
             <div className={style.Container}>
                 {title && <h2 className={'text text_type_main-large ' + style.Title}>{title}</h2>}
                 <button className={style.ButtonClose} onClick={onClose}></button>

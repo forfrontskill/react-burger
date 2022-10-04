@@ -8,6 +8,7 @@ import style from './burger-constructor.module.css';
 import OrderDetails from "../order-details/order-details";
 import { IngredientsContext } from "../../services/appContext";
 import { createOrder } from "../../utils/burger-api";
+import Modal from "../modal/modal";
 
 const ADD_INGREDIENTS = 'ADD_INGREDIENTS';
 const ORDER_NUMBER_CREATED = 'ORDER_NUMBER_CREATED';
@@ -76,7 +77,7 @@ const BurgerConstructor = () => {
         dispatch({ type: ADD_INGREDIENTS, ingredients });
     }, [dispatch, ingredients]);
 
-    const handelCreateOrder = () => {
+    const handleCreateOrder = () => {
         createOrder(order.orderIds)
             .then((data) => {
                 dispatch({ type: ORDER_NUMBER_CREATED, orderNumber: data.order.number });
@@ -134,11 +135,15 @@ const BurgerConstructor = () => {
             <div className={style.SubmitContainer}>
                 <p className={"text text_type_digits-medium " + style.Price}>{price}</p>
                 <img className={style.Image} src={KrisatlIcon} alt='Иконка символа кристалла (виртуальная валюта)' />
-                <Button type="primary" size="large" onClick={handelCreateOrder} disabled={order.orderNumber}>
+                <Button type="primary" size="large" onClick={handleCreateOrder} disabled={order.orderNumber} htmlType='submit'>
                     Оформить заказ
                 </Button>
             </div>
-            {isOpenModal && <OrderDetails orderNumber={order.orderNumber} onClose={handleCloseOrderModal} />}
+            {isOpenModal &&
+                <Modal onClose={handleCloseOrderModal}>
+                    <OrderDetails orderNumber={order.orderNumber} />
+                </Modal>
+            }
         </section>
     )
 };

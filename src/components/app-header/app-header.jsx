@@ -8,15 +8,17 @@ import style from './app-header.module.css';
 const AppHeader = () => {
 
     return (
-        <nav className={style.AppHeader}>
-            <div>
-                <MenuButton icon={<BurgerIcon />} text={'Конструктор'} type='active' onClick={()=>{}}/>
-                <MenuButton icon={<ListIcon />} text={'Лента заказов'} type='inactive' onClick={()=>{}}/>
-            </div>
+        <header>
+            <nav className={style.AppHeader}>
+                <div>
+                    <MenuButton icon={<BurgerIcon />} text={'Конструктор'} type='active' onClick={() => { }} />
+                    <MenuButton icon={<ListIcon />} text={'Лента заказов'} type='inactive' onClick={() => { }} />
+                </div>
 
-            <Logo />
-            <MenuButton icon={<MenuIcon />} text={'Личный кабинет'} type='inactive' onClick={()=>{}}/>
-        </nav>
+                <Logo />
+                <MenuButton icon={<MenuIcon />} text={'Личный кабинет'} type='inactive' onClick={() => { }} />
+            </nav>
+        </header>
     )
 }
 
