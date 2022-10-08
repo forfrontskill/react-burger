@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
-    max-width: 600px;
+    min-width: 600px;
     padding: 100px 16px 52px;
 }
 
