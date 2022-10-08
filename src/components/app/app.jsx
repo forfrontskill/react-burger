@@ -6,27 +6,23 @@ import BurgerConstructor from '../../components/burger-constructor/burger-constr
 import Content from '../../components/content/content';
 import { getIngredients } from '../../utils/burger-api';
 import { IngredientsContext } from "../../services/appContext";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getMenu } from "../../services/actions/menu";
 
 const App = () => {
+
+    const dispatch = useDispatch();
+
+    const menu = useSelector(store => store.menu);
+    console.log(menu);
 
     const [isFetching, setFetching] = useState(false);
     const [ingredients, setIngredients] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
-        getIngredients()
-            .then(({ data }) => {
-                setIngredients(data);
-            })
-            .catch(err => {
-                console.log('Ошибка получения данных:', err);
-                setErrorMessage(err);
-            })
-            .finally(() => {
-                setFetching(true);
-            })
-    }, [])
+        dispatch(getMenu());
+    }, [dispatch])
 
     return (
         <>
