@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import { useDrag } from "react-dnd";
 
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -8,8 +9,17 @@ import { IngredientType } from "../../utils/objects";
 
 const BurgerIngredient = ({ingredient, onClick}) => {
     const {image, price, count, name,} = ingredient;
+
+    const [,dragRef] = useDrag({
+        type: 'ingredient',
+        item: ingredient,
+        collect: monitor => ({
+            isDrag: monitor.isDragging()
+        })
+    });
+
     return (
-        <div className={style.BurgerIngredient} onClick={onClick(ingredient)}>
+        <div className={style.BurgerIngredient} onClick={onClick(ingredient)} ref={dragRef}>
             <img className={style.Image} src={image} alt='Изображение ингредиента'/>
             <span className={'text text_type_digits-default ' + style.Price}>
                     {price}

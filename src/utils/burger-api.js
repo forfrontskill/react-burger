@@ -9,7 +9,7 @@ export const getIngredients = () => {
     return request(`${BASE_URL}/ingredients`)
 }
 
-export const createOrder = (ingredients) => {
+export const createOrderRequest = (ingredients) => {
     return request(`${BASE_URL}/orders`, {
         method: 'POST',
         headers,

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 import AppHeader from '../../components/app-header/app-header';
 import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
@@ -9,16 +11,12 @@ import { IngredientsContext } from "../../services/appContext";
 import { useDispatch, useSelector } from "react-redux";
 import { getMenu } from "../../services/actions/menu";
 
+
 const App = () => {
 
     const dispatch = useDispatch();
 
-    const menu = useSelector(store => store.menu);
-    console.log(menu);
-
-    const [isFetching, setFetching] = useState(false);
-    const [ingredients, setIngredients] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
+    const { itemsRequest, itemsRequestFailed, itemsRequestFailedMessage } = useSelector(store => store.menu);
 
     useEffect(() => {
         dispatch(getMenu());
@@ -27,24 +25,22 @@ const App = () => {
     return (
         <>
             <AppHeader />
-            <IngredientsContext.Provider value={ingredients}>
-                <Content>
-                    {isFetching ? (
-                        <>
-                            {errorMessage ? (
-                                <p>{errorMessage}</p>
-                            ) : (
-                                <>
-                                    <BurgerIngredients />
-                                    <BurgerConstructor />
-                                </>
-                            )}
-                        </>
-                    ) : (
-                        <p>ЗАГРУЗКА....</p>
-                    )}
-                </Content>
-            </IngredientsContext.Provider>
+            <Content>
+                {itemsRequest ? (
+                    <p>ЗАГРУЗКА....</p>
+                ) : (
+                    <>
+                        {itemsRequestFailed ? (
+                            <p>{itemsRequestFailedMessage}</p>
+                        ) : (
+                            <DndProvider backend={HTML5Backend}>
+                                <BurgerIngredients />
+                                <BurgerConstructor />
+                            </DndProvider>
+                        )}
+                    </>
+                )}
+            </Content>
         </>
     )
 }

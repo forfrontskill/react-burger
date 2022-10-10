@@ -1,22 +1,24 @@
-import React, { useState, useMemo, useContext } from "react";
+import React, { useState, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useDrag } from "react-dnd";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import Title from "../title/title";
 import Modal from "../modal/modal";
 import BurgerIngredientsGroup from "../burger-ingredients-group/burger-ingredients-group";
+import { ingredientFilter } from '../../utils/utils';
+import IngredientDetails from "../ingredient-details/ingredient-details";
+
+import { CLOSE_INGREDIENT_MODAL, OPEN_INGREDIENT_MODAL } from "../../services/actions/menu";
 
 import style from './burger-ingredients.module.css';
 
-import { ingredientFilter } from '../../utils/utils';
-import IngredientDetails from "../ingredient-details/ingredient-details";
-import { IngredientsContext } from "../../services/appContext";
-
 const BurgerIngredients = () => {
+    const dispatch = useDispatch();
 
-    const ingredients = useContext(IngredientsContext)
+    const ingredients = useSelector(store => store.menu.items);
+    const { showIngredientModalInfo, modalIngredient } = useSelector(store => store.menu);
 
-    const [isModalOpen, setModalOpen] = useState(false);
-    const [modalIngredient, setModalIngredient] = useState({});
     const [current, setCurrent] = useState('bun');
 
     const handleClickAnchor = (key) => {
@@ -28,11 +30,10 @@ const BurgerIngredients = () => {
     const mainList = useMemo(() => ingredientFilter(ingredients), [ingredients]);
 
     const handleModalOpen = (ingredient) => () => {
-        setModalIngredient(ingredient);
-        setModalOpen(true);
+        dispatch({ type: OPEN_INGREDIENT_MODAL, ingredient });
     }
     const handleModalClose = () => {
-        setModalOpen(false);
+        dispatch({ type: CLOSE_INGREDIENT_MODAL });
     }
 
     return (
@@ -55,7 +56,7 @@ const BurgerIngredients = () => {
                 <BurgerIngredientsGroup id='main' list={mainList.main} title='Начинки' onClick={handleModalOpen} />
                 <BurgerIngredientsGroup id='sauce' list={mainList.sauce} title='Соусы' onClick={handleModalOpen} />
             </div>
-            {isModalOpen &&
+            {showIngredientModalInfo &&
                 <Modal onClose={handleModalClose} title='Детали ингредиента'>
                     <IngredientDetails ingredient={modalIngredient} />
                 </Modal>
