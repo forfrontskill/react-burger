@@ -21,7 +21,6 @@ export function getMenu(){
                 })
             })
             .catch(err => {
-                console.log('Ошибка получения данных:', err);
                 dispatch({
                     type: GET_MENU_REQUEST_FAILED,
                     err

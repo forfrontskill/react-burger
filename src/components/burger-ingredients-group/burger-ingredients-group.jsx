@@ -5,10 +5,10 @@ import BurgerIngredient from "../burger-ingredient/burger-ingredient";
 
 import style from './burger-ingredients-group.module.css';
 
-const BurgerIngredientsGroup = ({ id, title, list, onClick }) => {
+const BurgerIngredientsGroup = ({ id, title, list, onClick,refHead }) => {
     return (
         <>
-            <h2 id={id} className={'text text_type_main-medium ' + style.GroupTitle}>{title}</h2>
+            <h2 ref={refHead} id={id} className={'text text_type_main-medium ' + style.GroupTitle}>{title}</h2>
             <div className={style.BurgerIngredientsGroup}>
                 {list.map((ingredient) => <BurgerIngredient key={ingredient._id} ingredient={ingredient} onClick={onClick} />)}
             </div>

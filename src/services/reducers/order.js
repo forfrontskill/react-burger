@@ -1,8 +1,18 @@
-import { moveElementInArray } from "../../utils/utils";
-import { ADD_INGREDIENTS, CLOSE_ORDER_MODAL, CREATE_ORDER_REQUEST, CREATE_ORDER_REQUEST_FAILED, CREATE_ORDER_REQUEST_FINISH, CREATE_ORDER_REQUEST_SUCCESS, MOVE_INGREDIENT_IN_ORDER, ORDER_NUMBER_CREATED } from "../actions/order";
+import { moveElementInArray, uuidv4 } from "../../utils/utils";
+import {
+    ADD_INGREDIENTS,
+    CLOSE_ORDER_MODAL,
+    CREATE_ORDER_REQUEST,
+    CREATE_ORDER_REQUEST_FAILED,
+    CREATE_ORDER_REQUEST_FINISH,
+    CREATE_ORDER_REQUEST_SUCCESS,
+    DELETE_INGREDIENT_FROM_ORDER,
+    MOVE_INGREDIENT_IN_ORDER
+} from "../actions/order";
 
 
 const initialState = {
+    count: 0,
     price: 0,
     bun: {},
     ingredients: [],
@@ -11,40 +21,43 @@ const initialState = {
     orderRequest: false,
     orderRequestFailed: false,
     orderRequestFailedMessage: '',
-    showOrderModalInfo: false
+    showOrderModalInfo: false,
+    isCanCreateOrder: false
 };
 
-export const orderReducer = (state = initialState, action) =>{
-    switch(action.type){
+export const orderReducer = (state = initialState, action) => {
+    switch (action.type) {
         case ADD_INGREDIENTS: {
-            const bun = action.ingredients.find((ingredient) => ingredient.type === 'bun');
-            const ingredientWithoutBuns = action.ingredients.filter((ingredient) => ingredient.type !== 'bun');
+            const preparedIngredient = { ...action.ingredient, key: uuidv4() }
+            const bun = preparedIngredient.type === 'bun' ? preparedIngredient : { ...state.bun };
+            const ingredients = preparedIngredient.type !== 'bun' ? [...state.ingredients, preparedIngredient] : [...state.ingredients];
 
-            const combinedBun = bun ? bun : { ...state.bun };
-            const combinedIngredients = ingredientWithoutBuns ? [...state.ingredients, ...ingredientWithoutBuns] : [...state.ingredients];
-
-            const allIngredients = [combinedBun, combinedBun, ...combinedIngredients];
+            const allIngredients = [bun, bun, ...ingredients];
 
             const price = allIngredients.reduce((acc, item) => {
-                return acc + item.price;
+
+                return Object.keys(item).length !== 0 ? acc + item.price : acc;
             }, 0);
 
             const orderIds = allIngredients.reduce((acc, item) => {
                 return [...acc, item._id];
             }, []);
 
+            const count = allIngredients.length;
+
             return {
+                count,
                 price,
                 orderIds,
-                bun: combinedBun,
-                ingredients: combinedIngredients,
-                orderNumber: null
+                bun,
+                ingredients,
+                orderNumber: null,
+                isCanCreateOrder: Object.keys(bun).length !== 0
             }
         }
         case MOVE_INGREDIENT_IN_ORDER: {
             const newOrder = [...state.ingredients];
             moveElementInArray(newOrder, action.dragIndex, action.hoverIndex);
-            console.log('newOrder',newOrder);
             return {
                 ...state,
                 ingredients: newOrder
@@ -61,13 +74,14 @@ export const orderReducer = (state = initialState, action) =>{
         case CREATE_ORDER_REQUEST_SUCCESS: {
             return {
                 price: 0,
-                bun: undefined,
+                bun: {},
                 ingredients: [],
                 orderIds: [],
                 orderNumber: action.orderNumber,
                 orderRequestFailed: false,
                 orderRequestFailedMessage: '',
-                showOrderModalInfo: true
+                showOrderModalInfo: true,
+                isCanCreateOrder: false
             }
         }
         case CREATE_ORDER_REQUEST_FAILED: {
@@ -87,6 +101,13 @@ export const orderReducer = (state = initialState, action) =>{
             return {
                 ...state,
                 showOrderModalInfo: false
+            }
+        }
+        case DELETE_INGREDIENT_FROM_ORDER: {
+            const newIngredients = [...state.ingredients].filter(ingr => ingr.key !== action.key);
+            return {
+                ...state,
+                ingredients: newIngredients
             }
         }
         default: {

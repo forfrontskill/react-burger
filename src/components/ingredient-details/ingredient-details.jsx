@@ -2,11 +2,11 @@ import React from "react";
 import IngredientDetailsCalorie from "../ingredient-details-calorie/ingredient-details-calorie";
 
 import style from './ingredient-details.module.css';
-import { IngredientType } from "../../utils/objects";
+import { useSelector } from "react-redux";
 
 
-const IngredientDetails = ({ ingredient }) => {
-    const { image_large:image, name, calories, carbohydrates, fat, proteins } = ingredient;
+const IngredientDetails = () => {
+    const { image_large:image, name, calories, carbohydrates, fat, proteins } = useSelector(store => store.menu.modalIngredient)
     return (
             <div className={style.IngredientDetails}>
                 <img className={style.Image} src={image} alt='Изображение ингредиента'/>
@@ -21,8 +21,5 @@ const IngredientDetails = ({ ingredient }) => {
     )
 };
 
-IngredientDetails.propTypes = {
-    ingredient: IngredientType.isRequired
-}
 
 export default IngredientDetails;

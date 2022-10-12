@@ -5,43 +5,22 @@ import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burg
 import style from './burger-constructor-element.module.css';
 import { useDrag, useDrop } from "react-dnd";
 
-const BurgerConstructorElement = ({ id, text, price, thumbnail, isLocked, type, index, moveIngr }) => {
+const BurgerConstructorElement = ({ id, text, price, thumbnail, isLocked, type, index, moveIngr, handleClose }) => {
     const ref = useRef(null);
     
-    const [{ handlerId }, drop] = useDrop({
+    const [, drop] = useDrop({
         accept: 'sort_ingr',
         collect(monitor) {
           return {
             handlerId: monitor.getHandlerId(),
           }
         },
-        hover(item, monitor) {
+        drop(item, monitor) {
           if (!ref.current) {
             return
           }
           const dragIndex = item.index
           const hoverIndex = index
-
-          if (dragIndex === hoverIndex) {
-            return
-          }
-
-          const hoverBoundingRect = ref.current?.getBoundingClientRect()
-
-          const hoverMiddleY =
-            (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-
-          const clientOffset = monitor.getClientOffset()
-
-          const hoverClientY = clientOffset.y - hoverBoundingRect.top
-
-          if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-            return
-          }
-
-          if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-            return
-          }
 
           moveIngr(dragIndex, hoverIndex, id)
 
@@ -49,7 +28,7 @@ const BurgerConstructorElement = ({ id, text, price, thumbnail, isLocked, type, 
         },
       });
 
-      const [{ isDragging }, drag] = useDrag({
+      const [, drag] = useDrag({
         type: 'sort_ingr',
         item: () => {
           return { id, index }
@@ -58,13 +37,15 @@ const BurgerConstructorElement = ({ id, text, price, thumbnail, isLocked, type, 
           isDragging: monitor.isDragging(),
         }),
       });
-      const opacity = isDragging ? 0 : 1;
+      
       drag(drop(ref));
 
-
+      const handleDelete = (e) => {
+        handleClose(id);
+      }
 
     return (
-        <div ref={ref} className={style.Container}>
+        <div  ref={ref} className={style.Container}>
             {!isLocked && <DragIcon type="primary" />}
             <ConstructorElement
                 type={type}
@@ -72,16 +53,21 @@ const BurgerConstructorElement = ({ id, text, price, thumbnail, isLocked, type, 
                 text={text}
                 price={price}
                 thumbnail={thumbnail}
+                handleClose={handleDelete}
             />
         </div>
     )
 };
 
 BurgerConstructorElement.propTypes = {
+    id: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     thumbnail: PropTypes.string.isRequired,
     isLocked: PropTypes.bool.isRequired,
+    index: PropTypes.number,
+    moveIngr: PropTypes.func.isRequired,
+    handleClose: PropTypes.func,
     type: PropTypes.string
 }
 
