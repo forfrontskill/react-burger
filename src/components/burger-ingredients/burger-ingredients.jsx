@@ -27,8 +27,13 @@ const BurgerIngredients = () => {
 
     const handleClickAnchor = (key) => {
         setCurrent(key);
-        const element = document.getElementById(key);
-        if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });;
+        if(key === 'bun'){
+            bunRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }else if(key === 'sauce'){
+            sauceRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else if(key === 'main'){
+            mainRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     }
 
     const handleScroll = ()=>{

@@ -1,4 +1,4 @@
-import { moveElementInArray, uuidv4 } from "../../utils/utils";
+import {  countIngredients, moveElementInArray } from "../../utils/utils";
 import {
     ADD_INGREDIENTS,
     CLOSE_ORDER_MODAL,
@@ -16,6 +16,7 @@ const initialState = {
     price: 0,
     bun: {},
     ingredients: [],
+    ingredientCount:[],
     orderIds: [],
     orderNumber: null,
     orderRequest: false,
@@ -28,7 +29,7 @@ const initialState = {
 export const orderReducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_INGREDIENTS: {
-            const preparedIngredient = { ...action.ingredient, key: uuidv4() }
+            const preparedIngredient = { ...action.ingredient }
             const bun = preparedIngredient.type === 'bun' ? preparedIngredient : { ...state.bun };
             const ingredients = preparedIngredient.type !== 'bun' ? [...state.ingredients, preparedIngredient] : [...state.ingredients];
 
@@ -43,6 +44,8 @@ export const orderReducer = (state = initialState, action) => {
                 return [...acc, item._id];
             }, []);
 
+            const ingredientCount = countIngredients([bun, ...ingredients]);
+            
             const count = allIngredients.length;
 
             return {
@@ -51,6 +54,7 @@ export const orderReducer = (state = initialState, action) => {
                 orderIds,
                 bun,
                 ingredients,
+                ingredientCount,
                 orderNumber: null,
                 isCanCreateOrder: Object.keys(bun).length !== 0
             }
@@ -77,6 +81,7 @@ export const orderReducer = (state = initialState, action) => {
                 bun: {},
                 ingredients: [],
                 orderIds: [],
+                ingredientCount:{},
                 orderNumber: action.orderNumber,
                 orderRequestFailed: false,
                 orderRequestFailedMessage: '',
@@ -104,9 +109,11 @@ export const orderReducer = (state = initialState, action) => {
             }
         }
         case DELETE_INGREDIENT_FROM_ORDER: {
+            
             const newIngredients = [...state.ingredients].filter(ingr => ingr.key !== action.key);
             return {
                 ...state,
+                ingredientCount: countIngredients([state.bun, ...newIngredients]),
                 ingredients: newIngredients
             }
         }

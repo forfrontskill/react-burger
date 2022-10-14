@@ -10,6 +10,7 @@ import OrderDetails from "../order-details/order-details";
 import Modal from "../modal/modal";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_INGREDIENTS, CLOSE_ORDER_MODAL, createOrder, DELETE_INGREDIENT_FROM_ORDER, MOVE_INGREDIENT_IN_ORDER } from "../../services/actions/order";
+import { uuidv4 } from "../../utils/utils";
 
 
 
@@ -19,7 +20,10 @@ const BurgerConstructor = () => {
     const [, dropTarget] = useDrop({
         accept: "ingredient",
         drop(ingredient) {
-            dispatch({ type: ADD_INGREDIENTS, ingredient });
+            dispatch({
+                type: ADD_INGREDIENTS,
+                ingredient: { ...ingredient, key: uuidv4() }
+            });
         },
     });
 
@@ -52,10 +56,8 @@ const BurgerConstructor = () => {
                 <div className={style.RecipeFix}>
                     <BurgerConstructorElement
                         key={bun.key}
-                        id={bun.key}
-                        text={`${bun.name} (верх)`}
-                        price={bun.price}
-                        thumbnail={bun.image}
+                        ingredient={bun}
+                        bunPositionName={' (верх)'}
                         isLocked={true}
                         type='top'
                         moveIngr={() => { }}
@@ -64,27 +66,22 @@ const BurgerConstructor = () => {
             )}
             <div className={style.Recipes}>
                 {ingredientWithoutBuns.map((burgerElement, index) => {
-                    return <BurgerConstructorElement
+                    return (<BurgerConstructorElement
                         key={burgerElement.key}
                         index={index}
-                        id={burgerElement.key}
-                        text={burgerElement.name}
-                        price={burgerElement.price}
-                        thumbnail={burgerElement.image}
+                        ingredient={burgerElement}
                         isLocked={false}
                         moveIngr={moveIngr}
                         handleClose={handleDelete}
-                    />;
+                    />);
                 })}
             </div>
             {isEmptyBun && (
                 <div className={style.RecipeFix}>
                     <BurgerConstructorElement
                         key={bun.key}
-                        id={bun.key}
-                        text={`${bun.name} (низ)`}
-                        price={bun.price}
-                        thumbnail={bun.image}
+                        ingredient={bun}
+                        bunPositionName={' (низ)'}
                         isLocked={true}
                         type='bottom'
                         moveIngr={() => { }}

@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import style from './content.module.css';
 
 const Content = ({children}) => {
-    return <main className={style.Content}>
+    return (<main className={style.Content}>
         {children}
-    </main>
+    </main>)
 };
 
 Content.propTypes = {

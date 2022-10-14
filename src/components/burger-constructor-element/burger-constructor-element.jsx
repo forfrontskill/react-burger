@@ -4,8 +4,12 @@ import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burg
 
 import style from './burger-constructor-element.module.css';
 import { useDrag, useDrop } from "react-dnd";
+import { IngredientType } from "../../utils/objects";
 
-const BurgerConstructorElement = ({ id, text, price, thumbnail, isLocked, type, index, moveIngr, handleClose }) => {
+const BurgerConstructorElement = ({ ingredient, bunPositionName = '',  isLocked, type, index, moveIngr, handleClose }) => {
+
+    const {_id:id, key, name, price, image: thumbnail } = ingredient;
+
     const ref = useRef(null);
     
     const [, drop] = useDrop({
@@ -41,7 +45,7 @@ const BurgerConstructorElement = ({ id, text, price, thumbnail, isLocked, type, 
       drag(drop(ref));
 
       const handleDelete = (e) => {
-        handleClose(id);
+        handleClose(key);
       }
 
     return (
@@ -50,7 +54,7 @@ const BurgerConstructorElement = ({ id, text, price, thumbnail, isLocked, type, 
             <ConstructorElement
                 type={type}
                 isLocked={isLocked}
-                text={text}
+                text={`${name} ${bunPositionName}`}
                 price={price}
                 thumbnail={thumbnail}
                 handleClose={handleDelete}
@@ -60,10 +64,8 @@ const BurgerConstructorElement = ({ id, text, price, thumbnail, isLocked, type, 
 };
 
 BurgerConstructorElement.propTypes = {
-    id: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    thumbnail: PropTypes.string.isRequired,
+    ingredient: IngredientType.isRequired,
+    bunPositionName: PropTypes.string,
     isLocked: PropTypes.bool.isRequired,
     index: PropTypes.number,
     moveIngr: PropTypes.func.isRequired,
