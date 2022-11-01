@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useCallback } from "react";
+import { useDrop } from "react-dnd";
 
 import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import KrisatlIcon from '../../images/kristal_icon.svg';
@@ -6,140 +7,97 @@ import BurgerConstructorElement from "../burger-constructor-element/burger-const
 
 import style from './burger-constructor.module.css';
 import OrderDetails from "../order-details/order-details";
-import { IngredientsContext } from "../../services/appContext";
-import { createOrder } from "../../utils/burger-api";
 import Modal from "../modal/modal";
+import { useDispatch, useSelector } from "react-redux";
+import { ADD_INGREDIENTS, CLOSE_ORDER_MODAL, createOrder, DELETE_INGREDIENT_FROM_ORDER, MOVE_INGREDIENT_IN_ORDER } from "../../services/actions/order";
+import { uuidv4 } from "../../utils/utils";
 
-const ADD_INGREDIENTS = 'ADD_INGREDIENTS';
-const ORDER_NUMBER_CREATED = 'ORDER_NUMBER_CREATED';
 
-const initialState = {
-    price: 0,
-    bun: undefined,
-    ingredients: [],
-    orderIds: [],
-    orderNumber: null
-};
-
-function reducer(state, action) {
-    switch (action.type) {
-        case ADD_INGREDIENTS: {
-            const bun = action.ingredients.find((ingredient) => ingredient.type === 'bun');
-            const ingredientWithoutBuns = action.ingredients.filter((ingredient) => ingredient.type !== 'bun');
-
-            const combinedBun = bun ? bun : { ...state.bun };
-            const combinedIngredients = ingredientWithoutBuns ? [...state.ingredients, ...ingredientWithoutBuns] : [...state.ingredients];
-
-            const allIngredients = [combinedBun, combinedBun, ...combinedIngredients];
-
-            const price = allIngredients.reduce((acc, item) => {
-                return acc + item.price;
-            }, 0);
-
-            const orderIds = allIngredients.reduce((acc, item) => {
-                return [...acc, item._id];
-            }, []);
-
-            return {
-                price,
-                orderIds,
-                bun: combinedBun,
-                ingredients: combinedIngredients,
-                orderNumber: null
-            }
-        }
-        case ORDER_NUMBER_CREATED: {
-            return {
-                price: 0,
-                bun: undefined,
-                ingredients: [],
-                orderIds: [],
-                orderNumber: action.orderNumber
-            }
-        }
-        default: {
-            throw new Error(`Ошибочный тип action: ${action.type}`);
-        }
-    }
-}
 
 const BurgerConstructor = () => {
-    const [isOpenModal, setOpenModal] = useState(false);
+    const dispatch = useDispatch();
 
-    const ingredients = useContext(IngredientsContext);
+    const [, dropTarget] = useDrop({
+        accept: "ingredient",
+        drop(ingredient) {
+            dispatch({
+                type: ADD_INGREDIENTS,
+                ingredient: { ...ingredient, key: uuidv4() }
+            });
+        },
+    });
 
-    const [order, dispatch] = useReducer(reducer, initialState);
+    const order = useSelector(store => store.order);
+
     const price = order.price;
     const ingredientWithoutBuns = order.ingredients;
     const bun = order.bun;
-
-    useEffect(() => {
-        dispatch({ type: ADD_INGREDIENTS, ingredients });
-    }, [dispatch, ingredients]);
+    const isEmptyBun = Object.keys(bun).length !== 0;
 
     const handleCreateOrder = () => {
-        createOrder(order.orderIds)
-            .then((data) => {
-                dispatch({ type: ORDER_NUMBER_CREATED, orderNumber: data.order.number });
-                setOpenModal(true);
-                return data;
-            })
-            .catch(err => {
-                console.log('Ошибка получения данных:', err);
-            })
+        dispatch(createOrder(order.orderIds));
     }
 
     const handleCloseOrderModal = () => {
-        setOpenModal(false);
+        dispatch({ type: CLOSE_ORDER_MODAL });
     }
 
+    const moveIngr = useCallback((dragIndex, hoverIndex) => {
+        dispatch({ type: MOVE_INGREDIENT_IN_ORDER, dragIndex, hoverIndex });
+    }, [dispatch]);
+
+    const handleDelete = (key) => {
+        dispatch({ type: DELETE_INGREDIENT_FROM_ORDER, key });
+    }
 
     return (
-        <section className={style.BurgerConstructor}>
-            {bun && (
+        <section className={style.BurgerConstructor} ref={dropTarget}>
+            {isEmptyBun && (
                 <div className={style.RecipeFix}>
                     <BurgerConstructorElement
-                        key={bun._id + 'top'}
-                        text={`${bun.name} (верх)`}
-                        price={bun.price}
-                        thumbnail={bun.image}
+                        key={bun.key}
+                        ingredient={bun}
+                        bunPositionName={' (верх)'}
                         isLocked={true}
                         type='top'
+                        moveIngr={() => { }}
                     />
                 </div>
             )}
             <div className={style.Recipes}>
-                {ingredientWithoutBuns.map((burgerElement) => {
-                    return <BurgerConstructorElement
-                        key={burgerElement._id}
-                        text={burgerElement.name}
-                        price={burgerElement.price}
-                        thumbnail={burgerElement.image}
+                {ingredientWithoutBuns.map((burgerElement, index) => {
+                    return (<BurgerConstructorElement
+                        key={burgerElement.key}
+                        index={index}
+                        ingredient={burgerElement}
                         isLocked={false}
-                    />;
+                        moveIngr={moveIngr}
+                        handleClose={handleDelete}
+                    />);
                 })}
             </div>
-            {bun && (
+            {isEmptyBun && (
                 <div className={style.RecipeFix}>
                     <BurgerConstructorElement
-                        key={bun._id + 'bottom'}
-                        text={`${bun.name} (низ)`}
-                        price={bun.price}
-                        thumbnail={bun.image}
+                        key={bun.key}
+                        ingredient={bun}
+                        bunPositionName={' (низ)'}
                         isLocked={true}
                         type='bottom'
+                        moveIngr={() => { }}
                     />
                 </div>
             )}
 
+
             <div className={style.SubmitContainer}>
                 <p className={"text text_type_digits-medium " + style.Price}>{price}</p>
                 <img className={style.Image} src={KrisatlIcon} alt='Иконка символа кристалла (виртуальная валюта)' />
-                <Button type="primary" size="large" onClick={handleCreateOrder} disabled={order.orderNumber} htmlType='submit'>
+                <Button type="primary" size="large" onClick={handleCreateOrder} disabled={!order.isCanCreateOrder} htmlType='submit'>
                     Оформить заказ
                 </Button>
             </div>
-            {isOpenModal &&
+            {order.showOrderModalInfo &&
                 <Modal onClose={handleCloseOrderModal}>
                     <OrderDetails orderNumber={order.orderNumber} />
                 </Modal>

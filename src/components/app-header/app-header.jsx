@@ -8,8 +8,8 @@ import style from './app-header.module.css';
 const AppHeader = () => {
 
     return (
-        <header>
-            <nav className={style.AppHeader}>
+        <header className={style.AppHeader}>
+            <nav className={style.Menu}>
                 <div>
                     <MenuButton icon={<BurgerIcon />} text={'Конструктор'} type='active' onClick={() => { }} />
                     <MenuButton icon={<ListIcon />} text={'Лента заказов'} type='inactive' onClick={() => { }} />

@@ -1,7 +1,7 @@
 .BurgerConstructor {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     box-sizing: border-box;
     min-width: 600px;
     padding: 100px 16px 52px;
@@ -13,6 +13,7 @@
     align-items: center;
     justify-content: flex-end;
     padding-top: 40px;
+    flex-grow: 0;
 }
 
 .Image {
@@ -27,9 +28,11 @@
     display: flex;
     box-sizing: border-box;
     flex-direction: column;
-    overflow-y: scroll;
+    overflow-y: auto;
     margin: 0 0 16px 0;
     border-radius: 52px;
+    flex-grow: 5;
+    height: 100%;
 }
 
 .Recipes::-webkit-scrollbar {
@@ -46,4 +49,5 @@
 
 .RecipeFix {
     padding-right: 8px;
+    flex-grow: 1;
 }
