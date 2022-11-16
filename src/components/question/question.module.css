@@ -1,0 +1,15 @@
+.Question {
+    padding-bottom: 16px;
+}
+
+.Text {
+    display: inline;
+}
+
+.Link {
+    display: inline;
+    color: #4C4CFF;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}

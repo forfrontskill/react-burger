@@ -1,0 +1,19 @@
+.Profile {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.Menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.Link {
+    text-decoration: none;
+    color: #8585AD;
+}
+
+.LinkActive {
+    color: #F2F2F3;
+}
