@@ -16,12 +16,19 @@ const AppHeader = () => {
         },
         [history]
       ); 
+    
+      const handleConstructor = useCallback(
+        () => {
+            history.push({ pathname: '/' });
+        },
+        [history]
+      ); 
 
     return (
         <header className={style.AppHeader}>
             <nav className={style.Menu}>
                 <div>
-                    <MenuButton icon={<BurgerIcon />} text={'Конструктор'} type='active' onClick={() => { }} />
+                    <MenuButton icon={<BurgerIcon />} text={'Конструктор'} type='active' onClick={handleConstructor} />
                     <MenuButton icon={<ListIcon />} text={'Лента заказов'} type='inactive' onClick={() => { }} />
                 </div>
 
