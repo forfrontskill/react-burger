@@ -44,6 +44,11 @@ const initialState = {
         request: false,
         requestFailed: false,
         requestFailedMessage: '',
+    },
+    [GET_USER_RQUEST]: {
+        request: false,
+        requestFailed: false,
+        requestFailedMessage: '',
     }
 
 }

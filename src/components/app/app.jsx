@@ -15,57 +15,70 @@ import Register from "../register/register";
 import Login from "../login/login";
 import ResetPassword from "../reset-password/reset-password";
 import Profile from "../profile/profile";
-import { ProvideAuth } from "../../services/auth/auth";
+import { ProvideAuth, useAuth } from "../../services/auth/auth";
+import { getUserInfo, GET_USER_RQUEST } from "../../services/actions/user";
 
 
 const App = () => {
 
     const dispatch = useDispatch();
 
+    const user = useSelector(store => store.user);
+
     const { itemsRequest, itemsRequestFailed, itemsRequestFailedMessage } = useSelector(store => store.menu);
 
     useEffect(() => {
         dispatch(getMenu());
+        dispatch(getUserInfo());
     }, [dispatch])
+
 
     return (
         <ProvideAuth>
             <Router>
-            <AppHeader />
+                <AppHeader />
                 <Switch>
                     <Route path='/login'>
                         <Login />
                     </Route>
-                    <ProtectedRoute path='/' exact={true}>
-                        <Content>
-                            {itemsRequest ? (
-                                <p>ЗАГРУЗКА....</p>
-                            ) : (
-                                <>
-                                    {itemsRequestFailed ? (
-                                        <p>{itemsRequestFailedMessage}</p>
+                    {user.name ? (
+                        <>
+                            <ProtectedRoute path='/' exact={true}>
+                                <Content>
+                                    {itemsRequest ? (
+                                        <p>ЗАГРУЗКА....</p>
                                     ) : (
-                                        <DndProvider backend={HTML5Backend}>
-                                            <BurgerIngredients />
-                                            <BurgerConstructor />
-                                        </DndProvider>
+                                        <>
+                                            {itemsRequestFailed ? (
+                                                <p>{itemsRequestFailedMessage}</p>
+                                            ) : (
+                                                <DndProvider backend={HTML5Backend}>
+                                                    <BurgerIngredients />
+                                                    <BurgerConstructor />
+                                                </DndProvider>
+                                            )}
+                                        </>
                                     )}
-                                </>
-                            )}
-                        </Content>
-                    </ProtectedRoute>
-                    <ProtectedRoute path='/register' exact={true}>
-                        <Register />
-                    </ProtectedRoute>
-                    <ProtectedRoute path='/forgot-password' exact={true}>
-                        <ForgotPassword />
-                    </ProtectedRoute>
-                    <ProtectedRoute path='/reset-password' exact={true}>
-                        <ResetPassword />
-                    </ProtectedRoute>
-                    <ProtectedRoute path='/profile' exact={true}>
-                        <Profile />
-                    </ProtectedRoute>
+                                </Content>
+                            </ProtectedRoute>
+                            <ProtectedRoute path='/register' exact={true}>
+                                <Register />
+                            </ProtectedRoute>
+                            <ProtectedRoute path='/forgot-password' exact={true}>
+                                <ForgotPassword />
+                            </ProtectedRoute>
+                            <ProtectedRoute path='/reset-password' exact={true}>
+                                <ResetPassword />
+                            </ProtectedRoute>
+                            <ProtectedRoute path='/profile' exact={true}>
+                                <Profile />
+                            </ProtectedRoute>
+                        </>
+                    ) : (
+                        <>
+                            LOADER
+                        </>
+                    )}
                 </Switch>
             </Router>
         </ProvideAuth>
