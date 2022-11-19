@@ -1,0 +1,20 @@
+.IngredientDetails{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Image {
+    min-width: 480px;
+    padding-bottom: 16px;
+}
+
+.Title {
+    padding-bottom: 32px;
+}
+
+.Calories {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 60px;
+}
