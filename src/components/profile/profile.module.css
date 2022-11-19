@@ -1,3 +1,11 @@
+.Content {
+    display: flex;
+    flex-direction: row;
+    max-width: 1280px;
+    padding-top: 120px;
+    margin: 0 auto;
+}
+
 .Profile {
     display: flex;
     flex-direction: row;
@@ -7,13 +15,23 @@
 .Menu {
     display: flex;
     flex-direction: column;
+    padding-right: 40px;
 }
 
 .Link {
+    display: block;
+    width: 320px;
+    height: 64px;
     text-decoration: none;
     color: #8585AD;
+    cursor: pointer;
 }
 
 .LinkActive {
     color: #F2F2F3;
+}
+
+.Info {
+    padding-top: 80px;
+    width: 320px;
 }

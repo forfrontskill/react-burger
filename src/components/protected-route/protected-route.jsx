@@ -1,48 +1,42 @@
-import React, { useEffect, useState } from "react";
-
+import React from "react";
+import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 import { useAuth } from "../../services/auth/auth";
 
 
 const ProtectedRoute = ({ children, ...rest }) => {
 
-    // const [isUserLoaded, setUserLoaded] = useState(false);
-    const { user, getUser } = useAuth();
+  const { user } = useAuth();
 
-    // const init = () => {
-    //      getUser();
-    //      setUserLoaded(true);
-    // }
+  if (user.isAuthNeed) {
+    return null;
+  }
 
-    // useEffect(()=>{
-    //     init();   
-    // },[user.name]);
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        user.name ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/login',
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
+  );
 
-    console.log('userName:',user.name);
+}
 
-    // if (!isUserLoaded) {
-    //     console.log('Protected route: Return null ');
-    //     return null;
-    // }
-
-    return (
-        <Route
-          {...rest}
-          render={({ location }) =>
-            user.name ? (
-              children
-            ) : (
-              <Redirect
-                to={{
-                  pathname: '/login',
-                  state: { from: location }
-                }}
-              />
-            )
-          }
-        />
-      );
-
+ProtectedRoute.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 }
 
 export default ProtectedRoute;

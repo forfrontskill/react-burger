@@ -1,5 +1,6 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory, Route } from 'react-router-dom';
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import Title from "../title/title";
@@ -14,6 +15,7 @@ import style from './burger-ingredients.module.css';
 
 const BurgerIngredients = () => {
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const ingredients = useSelector(store => store.menu.items);
     const { showIngredientModalInfo, modalIngredient } = useSelector(store => store.menu);
@@ -27,37 +29,46 @@ const BurgerIngredients = () => {
 
     const handleClickAnchor = (key) => {
         setCurrent(key);
-        if(key === 'bun'){
+        if (key === 'bun') {
             bunRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }else if(key === 'sauce'){
+        } else if (key === 'sauce') {
             sauceRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else if(key === 'main'){
+        } else if (key === 'main') {
             mainRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
-    const handleScroll = ()=>{
+    const handleScroll = () => {
         const topContainer = ContainerIngredientsRef.current.getBoundingClientRect().top;
         const bottomContainer = ContainerIngredientsRef.current.getBoundingClientRect().bottom;
         const topBun = bunRef.current.getBoundingClientRect().top;
         const topMain = mainRef.current.getBoundingClientRect().top;
         const topSauce = sauceRef.current.getBoundingClientRect().top;
 
-        if(topContainer <= topBun &&  topBun <= bottomContainer){
+        if (topContainer <= topBun && topBun <= bottomContainer) {
             setCurrent('bun');
-        }else if (topContainer <= topMain &&  topMain <= bottomContainer) {
+        } else if (topContainer <= topMain && topMain <= bottomContainer) {
             setCurrent('main');
-        } else if(topContainer <= topSauce &&  topSauce <= bottomContainer) {
+        } else if (topContainer <= topSauce && topSauce <= bottomContainer) {
             setCurrent('sauce');
         }
     }
 
     const mainList = useMemo(() => ingredientFilter(ingredients), [ingredients]);
 
+    const redirectModalUrl = useCallback(
+        (id) => {
+            history.push({ pathname: `/ingredients/${id}` }, { fromModal: true });
+        },
+        [history]
+    );
+
     const handleModalOpen = (ingredient) => () => {
         dispatch({ type: OPEN_INGREDIENT_MODAL, ingredient });
+        redirectModalUrl(ingredient._id);
     }
     const handleModalClose = () => {
+        history.push({ pathname: `/` }, { fromModal: false });
         dispatch({ type: CLOSE_INGREDIENT_MODAL });
     }
 
@@ -75,17 +86,18 @@ const BurgerIngredients = () => {
                     Соусы
                 </Tab>
             </div>
-
             <div className={style.BurgerIngredientsList} onScroll={handleScroll} ref={ContainerIngredientsRef}>
-                <BurgerIngredientsGroup id='bun' list={mainList.bun} title='Булки' onClick={handleModalOpen} refHead={bunRef}/>
-                <BurgerIngredientsGroup id='main' list={mainList.main} title='Начинки' onClick={handleModalOpen} refHead={mainRef}/>
-                <BurgerIngredientsGroup id='sauce' list={mainList.sauce} title='Соусы' onClick={handleModalOpen} refHead={sauceRef}/>
+                <BurgerIngredientsGroup id='bun' list={mainList.bun} title='Булки' onClick={handleModalOpen} refHead={bunRef} />
+                <BurgerIngredientsGroup id='main' list={mainList.main} title='Начинки' onClick={handleModalOpen} refHead={mainRef} />
+                <BurgerIngredientsGroup id='sauce' list={mainList.sauce} title='Соусы' onClick={handleModalOpen} refHead={sauceRef} />
             </div>
-            {showIngredientModalInfo &&
-                <Modal onClose={handleModalClose} title='Детали ингредиента'>
-                    <IngredientDetails ingredient={modalIngredient} />
-                </Modal>
-            }
+            {showIngredientModalInfo && (
+                <Route path='/ingredients/:id' render={()=>{ return(
+                    <Modal onClose={handleModalClose} title='Детали ингредиента'>
+                        <IngredientDetails ingredient={modalIngredient} />
+                    </Modal>
+                )}}/>
+            )}
         </section>
     )
 };

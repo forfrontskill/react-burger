@@ -1,5 +1,6 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import React, { useState } from "react";
+import { Redirect } from 'react-router-dom';
 import { useAuth } from "../../services/auth/auth";
 import Question from "../question/question";
 
@@ -23,6 +24,18 @@ const Register = () => {
         e.preventDefault();
         auth.register(form);
     }
+
+    if (auth.user.name) {
+        return (
+            <Redirect
+                to={{
+                    pathname: '/'
+                }}
+            />
+        );
+    }
+
+    const isFormValid = form.email && form.password && form.name;
 
     return (
         <div className={styles.Register}>
@@ -56,6 +69,7 @@ const Register = () => {
                     htmlType='submit'
                     extraClass="mb-20"
                     onClick={handleSubmit}
+                    disabled={!isFormValid}
                 >
                     Зарегистрироваться
                 </Button>

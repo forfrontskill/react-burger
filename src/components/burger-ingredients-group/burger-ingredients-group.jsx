@@ -20,7 +20,11 @@ BurgerIngredientsGroup.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     list: PropTypes.array.isRequired,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
+    refHead: PropTypes.oneOfType([
+        PropTypes.func, 
+        PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+    ])
 }
 
 export default BurgerIngredientsGroup;

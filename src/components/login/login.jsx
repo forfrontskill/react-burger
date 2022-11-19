@@ -1,5 +1,6 @@
 
 import React, { useCallback, useState } from "react";
+import { Redirect } from 'react-router-dom';
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import Question from "../question/question";
 
@@ -9,20 +10,28 @@ import { useAuth } from "../../services/auth/auth";
 const Login = () => {
     const auth = useAuth();
 
-    console.log(auth);
-
     const [form, setForm] = useState({ email: '', password: '' })
 
     const handleChange = e => {
         const value = e.target.value;
         const name = e.target.name;
-        setForm({...form, [name]:value})
+        setForm({ ...form, [name]: value })
     }
 
-    const handleSubmit = useCallback( e =>{
+    const handleSubmit = useCallback(e => {
         e.preventDefault();
         auth.signIn(form);
-    },[form, auth])
+    }, [form, auth])
+
+    if (auth.user.name) {
+        return (
+            <Redirect
+                to={{
+                    pathname: '/'
+                }}
+            />
+        );
+    }
 
     return (
         <div className={styles.Login}>

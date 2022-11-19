@@ -1,5 +1,7 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import React, { useCallback, useState } from "react";
+import { useHistory, Redirect } from 'react-router-dom';
+import { useAuth } from "../../services/auth/auth";
 import { passwordResetConfirmRequest } from "../../utils/burger-api";
 import Question from "../question/question";
 
@@ -8,24 +10,38 @@ import styles from './reset-password.module.css';
 
 const ResetPassword = () => {
 
-    const [from, setFrom] = useState({
+    const auth = useAuth();
+
+    const history = useHistory();
+
+    const [form, setForm] = useState({
         password: '',
         token: '',
     });
 
     const handleChange = (e) => {
-        setFrom({ ...from, [e.target.name]: e.target.value });
+        setForm({ ...form, [e.target.name]: e.target.value });
     }
 
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
-        passwordResetConfirmRequest(from)
+        passwordResetConfirmRequest(form)
         .then(res => {
-            console.log('ResetConfirm', res);
+            history.replace({ pathname: '/login' })
         })
-    }, [from])
+    }, [form,history])
 
+    if (auth.user.name) {
+        return (
+            <Redirect
+                to={{
+                    pathname: '/'
+                }}
+            />
+        );
+    }
 
+    const isFormValid = form.password && form.token;
 
     return (
         <div className={styles.ResetPassword}>
@@ -36,7 +52,7 @@ const ResetPassword = () => {
                 <PasswordInput
                     extraClass="pb-6"
                     name='password'
-                    value={from.password}
+                    value={form.password}
                     onChange={handleChange}
                 />
                 <Input
@@ -44,13 +60,14 @@ const ResetPassword = () => {
                     placeholder="Введите код из письма"
                     extraClass="pb-6"
                     name='token'
-                    value={from.token}
+                    value={form.token}
                     onChange={handleChange}
                 />
                 <Button
                     extraClass="mb-20"
                     htmlType='submit'
                     onClick={handleSubmit}
+                    disabled={!isFormValid}
                 >
                     Сохранить
                 </Button>

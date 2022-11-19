@@ -16,8 +16,9 @@ const Question = ({questionText, questionLinkText, linkUrl}) => {
 }
 
 Question.propTypes = {
-    questionText: PropTypes.string,
-    questionLink: PropTypes.string,
+    questionText: PropTypes.string.isRequired,
+    questionLinkText: PropTypes.string.isRequired,
+    linkUrl: PropTypes.string.isRequired,
 }
 
 export default Question;

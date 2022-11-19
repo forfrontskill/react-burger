@@ -18,10 +18,15 @@ import {
     GET_USER_RQUEST,
     GET_USER_RQUEST_FINISH,
     GET_USER_RQUEST_SUCCESS,
-    GET_USER_RQUEST_FAILED
+    GET_USER_RQUEST_FAILED,
+    UPDATE_USER_RQUEST,
+    UPDATE_USER_RQUEST_FAILED,
+    UPDATE_USER_RQUEST_FINISH,
+    UPDATE_USER_RQUEST_SUCCESS
 } from "../actions/user"
 
 const initialState = {
+    isAuthNeed: true,
     email: '',
     password: '',
     name: '',
@@ -46,6 +51,11 @@ const initialState = {
         requestFailedMessage: '',
     },
     [GET_USER_RQUEST]: {
+        request: false,
+        requestFailed: false,
+        requestFailedMessage: '',
+    },
+    [UPDATE_USER_RQUEST]: {
         request: false,
         requestFailed: false,
         requestFailedMessage: '',
@@ -130,11 +140,10 @@ export const userReducer = (state = initialState, action) => {
             }
         }
         case LOGOUT_RQUEST_SUCCESS: {
-            const { email, name } = action.user;
             return {
                 ...state,
-                email,
-                name,
+                email:'',
+                name:'',
             }
         }
         case LOGOUT_RQUEST_FAILED: {
@@ -189,16 +198,17 @@ export const userReducer = (state = initialState, action) => {
         case GET_USER_RQUEST_FINISH: {
             return {
                 ...state,
-                [GET_USER_RQUEST]: { ...state[GET_USER_RQUEST], request: false }
+                [GET_USER_RQUEST]: { ...state[GET_USER_RQUEST], request: false },
+                isAuthNeed:false
             }
         }
         case GET_USER_RQUEST_SUCCESS: {
-            const { email, name } = action.user;
-            console.log('Reducer getUser:', action.user)
+            const { email, name, password } = action.user;
             return {
                 ...state,
                 email,
                 name,
+                password
             }
         }
         case GET_USER_RQUEST_FAILED: {
@@ -206,6 +216,39 @@ export const userReducer = (state = initialState, action) => {
                 ...state,
                 [GET_USER_RQUEST]: {
                     ...state[GET_USER_RQUEST],
+                    request: false,
+                    requestFailed: true,
+                    requestFailedMessage: action.err
+                }
+            }
+        }
+
+        case UPDATE_USER_RQUEST: {
+            return {
+                ...state,
+                [UPDATE_USER_RQUEST]: { ...state[UPDATE_USER_RQUEST], request: true }
+            }
+        }
+        case UPDATE_USER_RQUEST_FINISH: {
+            return {
+                ...state,
+                [UPDATE_USER_RQUEST]: { ...state[UPDATE_USER_RQUEST], request: false }
+            }
+        }
+        case UPDATE_USER_RQUEST_SUCCESS: {
+            const { email, name, password } = action.user;
+            return {
+                ...state,
+                email,
+                name,
+                password
+            }
+        }
+        case UPDATE_USER_RQUEST_FAILED: {
+            return {
+                ...state,
+                [UPDATE_USER_RQUEST]: {
+                    ...state[UPDATE_USER_RQUEST],
                     request: false,
                     requestFailed: true,
                     requestFailedMessage: action.err

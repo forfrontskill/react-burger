@@ -1,4 +1,4 @@
-import { getUserRequest, loginRequest, logoutRequest, registerRequest } from "../../utils/burger-api";
+import { getUserRequest, loginRequest, logoutRequest, registerRequest, updateUserRequest } from "../../utils/burger-api";
 import { deleteCookie, getCookie, setCookie } from "../../utils/cookie";
 
 export const LOGIN_RQUEST = 'LOGIN_RQUEST';
@@ -26,10 +26,14 @@ export const GET_USER_RQUEST_FINISH = 'GET_USER_RQUEST_FINISH';
 export const GET_USER_RQUEST_SUCCESS = 'GET_USER_RQUEST_SUCCESS';
 export const GET_USER_RQUEST_FAILED = 'GET_USER_RQUEST_FAILED';
 
+export const UPDATE_USER_RQUEST = 'UPDATE_USER_RQUEST';
+export const UPDATE_USER_RQUEST_FINISH = 'UPDATE_USER_RQUEST_FINISH';
+export const UPDATE_USER_RQUEST_SUCCESS = 'UPDATE_USER_RQUEST_SUCCESS';
+export const UPDATE_USER_RQUEST_FAILED = 'UPDATE_USER_RQUEST_FAILED';
+
 
 export function login(form){
     return function(dispatch){
-        console.log('start loging action');
         dispatch({type: LOGIN_RQUEST});
         loginRequest(form)
         .then(res => {
@@ -40,13 +44,10 @@ export function login(form){
                 }
             }
             if (authToken) {
-                console.log('authToken',authToken);
-                console.log('refreshToken',res.refreshToken);
                 setCookie('token', authToken);
                 setCookie('refreshToken', res.refreshToken);
             }
 
-            console.log(res);
             dispatch({type: LOGIN_RQUEST_SUCCESS, user: res.user});
         })
         .catch(err => {
@@ -65,11 +66,9 @@ export function login(form){
 
 export function registeration(form){
     return function(dispatch){
-        console.log('start loging action');
         dispatch({type: REGISTER_RQUEST});
         registerRequest(form)
         .then(res => {
-            console.log('registerRes', res);
             let authToken;
             if(res.accessToken){
                 if (res.accessToken.indexOf('Bearer') === 0) {
@@ -77,13 +76,10 @@ export function registeration(form){
                 }
             }
             if (authToken) {
-                console.log('authToken',authToken);
-                console.log('refreshToken',res.refreshToken);
                 setCookie('token', authToken);
                 setCookie('refreshToken', res.refreshToken);
             }
 
-            console.log(res);
             dispatch({type: REGISTER_RQUEST_SUCCESS, user: res.user})
         })
         .catch(err => {
@@ -102,12 +98,10 @@ export function registeration(form){
 
 export function logout(){
     return function(dispatch){
-        console.log('start logout action');
         dispatch({type: LOGOUT_RQUEST});
         const refreshToken = getCookie('refreshToken');
         logoutRequest(refreshToken)
         .then(res => {
-            console.log('registerRes', res);
             if (res.success) {
                 deleteCookie('refreshToken');
                 deleteCookie('token');
@@ -130,11 +124,9 @@ export function logout(){
 
 export function getUserInfo(){
     return function(dispatch){
-        console.log('getUserInfo action');
         dispatch({type: GET_USER_RQUEST});
         getUserRequest()
         .then(res => {
-            console.log('getUser dispatch success');
             dispatch({type: GET_USER_RQUEST_SUCCESS, user: res.user})
         })
         .catch(err => {
@@ -146,6 +138,27 @@ export function getUserInfo(){
         .finally(() => {
             dispatch({
                 type: GET_USER_RQUEST_FINISH
+            })
+        })
+    }
+}
+
+export function updateUserInfo(form){
+    return function(dispatch){
+        dispatch({type: UPDATE_USER_RQUEST});
+        updateUserRequest(form)
+        .then(res => {
+            dispatch({type: UPDATE_USER_RQUEST_SUCCESS, user: res.user})
+        })
+        .catch(err => {
+            dispatch({
+                type: UPDATE_USER_RQUEST_FAILED,
+                err
+            }) 
+        })
+        .finally(() => {
+            dispatch({
+                type: UPDATE_USER_RQUEST_FINISH
             })
         })
     }

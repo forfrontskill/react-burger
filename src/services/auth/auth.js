@@ -1,8 +1,6 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerRequest } from '../../utils/burger-api';
-import { setCookie } from '../../utils/cookie';
-import { getUserInfo, login, logout, registeration } from '../actions/user';
+import { getUserInfo, login, logout, registeration, updateUserInfo } from '../actions/user';
 import { AuthContext } from '../appContext'
 
 
@@ -33,6 +31,10 @@ export function useProvideAuth() {
         dispatch(registeration(form));
     }
 
+    const updateUser = form => {
+        dispatch(updateUserInfo(form));
+    }
+
     const signOut = () => {
         dispatch(logout());
     };
@@ -42,6 +44,7 @@ export function useProvideAuth() {
         signIn,
         signOut,
         register,
-        getUser
+        getUser,
+        updateUser
     };
 }

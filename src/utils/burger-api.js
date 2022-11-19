@@ -1,4 +1,4 @@
-import { getCookie } from "./cookie";
+import { getCookie, setCookie } from "./cookie";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -14,27 +14,19 @@ export const getIngredients = () => {
 export const createOrderRequest = (ingredients) => {
     return request(`${BASE_URL}/orders`, {
         method: 'POST',
-        headers,
+        headers: {
+            ...headers,
+            authorization: `Bearer ${getCookie('token')}`
+        },
         body: JSON.stringify({ ingredients })
     })
-}
-
-const form = {
-    email: "test@requests.ru",
-    password: "testRequests"
-}
-
-const formRegister = {
-    email: "test@requests1.ru",
-    password: "testRequests",
-    name: "RequestApiName1"
 }
 
 export const loginRequest = (loginForm) => {
     return request(`${BASE_URL}/auth/login`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(form)
+        body: JSON.stringify(loginForm)
     });
 };
 
@@ -42,7 +34,7 @@ export const registerRequest = (loginForm) => {
     return request(`${BASE_URL}/auth/register`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(formRegister)
+        body: JSON.stringify(loginForm)
     });
 };
 
@@ -62,11 +54,11 @@ export const passwordResetConfirmRequest = async (form) => {
     });
 };
 
-export const refreshTokenRequest = (refreshToken) => {
-    return request(`${BASE_URL}/auth/token`, {
+export const refreshTokenRequest = () => {
+    return fetch(`${BASE_URL}/auth/token`, {
         method: 'POST',
         headers,
-        body: JSON.stringify({token: refreshToken})
+        body: JSON.stringify({ token: getCookie('refreshToken') })
     });
 };
 
@@ -74,7 +66,7 @@ export const logoutRequest = (refreshToken) => {
     return request(`${BASE_URL}/auth/logout`, {
         method: 'POST',
         headers,
-        body: JSON.stringify({token: refreshToken})
+        body: JSON.stringify({ token: refreshToken })
     });
 };
 
@@ -88,6 +80,17 @@ export const getUserRequest = () => {
     });
 };
 
+export const updateUserRequest = (form) => {
+    return request(`${BASE_URL}/auth/user`, {
+        method: 'PATCH',
+        headers: {
+            ...headers,
+            authorization: `Bearer ${getCookie('token')}`
+        },
+        body: JSON.stringify(form)
+    });
+};
+
 const checkResponse = (res) => {
     if (res.ok) {
         return res.json();
@@ -96,5 +99,35 @@ const checkResponse = (res) => {
 }
 
 const request = (url, options) => {
-    return fetch(url, options).then(checkResponse)
+    const requestCallback = (url, options) => { return fetch(url, options) };
+    return refreshTokenExpired(requestCallback, url, options);
+}
+
+
+const refreshTokenExpired = (req, url, options) => {
+    return req(url, options)
+        .then(checkResponse)
+        .catch((res) => {
+            return refreshTokenRequest()
+                .then(checkResponse)
+                .then((res => {
+                    setCookie('refreshToken', res.refreshToken);
+
+                    let authToken;
+                    if (res.accessToken) {
+                        if (res.accessToken.indexOf('Bearer') === 0) {
+                            authToken = res.accessToken.split('Bearer ')[1];
+                        }
+                    }
+                    setCookie('token', authToken);
+
+                    return res;
+                }))
+                .then((res) => {
+                    return req(url, options).then(checkResponse);
+                })
+                .catch((res) => {
+                    return Promise.reject(`Ошибка: ${res.status}`);
+                })
+        });
 }
