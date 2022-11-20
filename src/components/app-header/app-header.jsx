@@ -25,7 +25,7 @@ const AppHeader = () => {
         [history]
       ); 
     
-      const handleConstructor = useCallback(
+      const handleForwardMainPage = useCallback(
         () => {
             history.push({ pathname: PATH_BASE });
         },
@@ -36,11 +36,12 @@ const AppHeader = () => {
         <header className={style.AppHeader}>
             <nav className={style.Menu}>
                 <div>
-                    <MenuButton icon={<BurgerIcon />} text={'Конструктор'} type={isConstuctor} onClick={handleConstructor} />
+                    <MenuButton icon={<BurgerIcon />} text={'Конструктор'} type={isConstuctor} onClick={handleForwardMainPage} />
                     <MenuButton icon={<ListIcon />} text={'Лента заказов'} type='inactive' onClick={() => { }} />
                 </div>
-
+                <div className={style.Logo} onClick={handleForwardMainPage}>
                 <Logo />
+                </div>
                 <MenuButton icon={<MenuIcon />} text={'Личный кабинет'} type={isProfile}  onClick={(e) => {
                     e.preventDefault();
                     handleProfile()}} />

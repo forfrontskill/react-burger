@@ -1,32 +1,27 @@
 import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useHistory, Redirect } from 'react-router-dom';
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { passwordResetRequest } from "../../utils/burger-api";
-import Question from "../question/question";
+import Question from "../../components/question/question";
 
 import styles from './forgot-password.module.css';
-import { useAuth } from "../../services/auth/auth";
+import { useAuth } from "../../hooks/useAuth";
+import useForm from "../../hooks/useForm";
 
 const ForgotPassword = () => {
+
+    const { form, handleChange } = useForm({ email: '' });
 
     const auth = useAuth();
 
     const history = useHistory();
 
-    const [form, setForm] = useState({
-        email: '',
-    });
-
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    }
-
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
         passwordResetRequest(form).then(res => {
-            history.replace({ pathname: '/reset-password'}, {fromForgotPassword: true})
+            history.replace({ pathname: '/reset-password' }, { fromForgotPassword: true })
         });
-    },[form,history])
+    }, [form, history])
 
     if (auth.user.name) {
         return (
@@ -42,7 +37,7 @@ const ForgotPassword = () => {
 
     return (
         <div className={styles.ForgotPassword}>
-            <form className={styles.Form}>
+            <form className={styles.Form} onSubmit={handleSubmit}>
                 <p className={`text text_type_main-medium ${styles.Title} pb-6`}>
                     Восстановление пароля
                 </p>
@@ -57,7 +52,6 @@ const ForgotPassword = () => {
                 <Button
                     htmlType='submit'
                     extraClass="mb-20"
-                    onClick={handleSubmit}
                     disabled={!isFormValid}
                 >
                     Восстановить

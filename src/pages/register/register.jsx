@@ -1,24 +1,21 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import React, { useState } from "react";
+import React from "react";
 import { Redirect } from 'react-router-dom';
-import { useAuth } from "../../services/auth/auth";
-import Question from "../question/question";
+import { useAuth } from "../../hooks/useAuth";
+import Question from "../../components/question/question";
 
 import styles from './register.module.css';
+import useForm from "../../hooks/useForm";
 
 const Register = () => {
 
     const auth = useAuth();
 
-    const [form, setForm] = useState({
+    const { form, handleChange } = useForm({
         email: '',
         password: '',
         name: ''
-    })
-
-    const handleChange = e => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    }
+    });
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -39,7 +36,7 @@ const Register = () => {
 
     return (
         <div className={styles.Register}>
-            <form className={styles.Form}>
+            <form className={styles.Form} onSubmit={handleSubmit} >
                 <p className={`text text_type_main-medium ${styles.Title} pb-6`}>
                     Регистрация
                 </p>
@@ -68,7 +65,6 @@ const Register = () => {
                 <Button
                     htmlType='submit'
                     extraClass="mb-20"
-                    onClick={handleSubmit}
                     disabled={!isFormValid}
                 >
                     Зарегистрироваться

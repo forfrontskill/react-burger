@@ -1,27 +1,27 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import React, { useCallback, useState } from "react";
-import { useHistory, Redirect } from 'react-router-dom';
-import { useAuth } from "../../services/auth/auth";
+import React, { useCallback } from "react";
+import { useHistory, Redirect, useLocation } from 'react-router-dom';
+import { useAuth } from "../../hooks/useAuth";
 import { passwordResetConfirmRequest } from "../../utils/burger-api";
-import Question from "../question/question";
+import Question from "../../components/question/question";
+
 
 import styles from './reset-password.module.css';
+import useForm from "../../hooks/useForm";
 
 
 const ResetPassword = () => {
 
     const auth = useAuth();
+    const location = useLocation();
+    const isFromForgotPassword = !location?.state?.fromForgotPassword;
 
-    const history = useHistory();
-
-    const [form, setForm] = useState({
+    const { form, handleChange } = useForm({
         password: '',
         token: '',
     });
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    }
+    const history = useHistory();
 
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
@@ -41,11 +41,21 @@ const ResetPassword = () => {
         );
     }
 
+    if(isFromForgotPassword) {
+        return (
+            <Redirect
+                to={{
+                    pathname: '/forgot-password'
+                }}
+            />
+        );
+    }
+
     const isFormValid = form.password && form.token;
 
     return (
         <div className={styles.ResetPassword}>
-            <form className={styles.Form}>
+            <form className={styles.Form} onSubmit={handleSubmit}>
                 <p className={`text text_type_main-medium ${styles.Title} pb-6`}>
                     Восстановление пароля
                 </p>
@@ -66,7 +76,6 @@ const ResetPassword = () => {
                 <Button
                     extraClass="mb-20"
                     htmlType='submit'
-                    onClick={handleSubmit}
                     disabled={!isFormValid}
                 >
                     Сохранить

@@ -1,6 +1,7 @@
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../services/auth/auth';
+import React, { useEffect } from 'react';
+import { useAuth } from '../../hooks/useAuth';
+import useForm from '../../hooks/useForm';
 
 import styles from './profile-form.module.css';
 
@@ -8,8 +9,7 @@ import styles from './profile-form.module.css';
 const ProfileForm = () => {
 
     const {user, updateUser } = useAuth();
-
-    const [form, setForm] = useState({name:'', email:'', password:'', isChanged: false});
+    const { form, setForm } = useForm({name:'', email:'', password:'', isChanged: false});
 
     useEffect(()=>{
         setForm({...form, name: user.name, email: user.email, password: user.password});
@@ -29,9 +29,10 @@ const ProfileForm = () => {
         setForm({...form, name: user.name, email: user.email, password: user.password, isChanged: false});
     }
 
+    const isFormValid = form.name && form.email && form.password;
 
     return (
-        <form>
+        <form onSubmit={handleSave}>
             <Input
                 type='text'
                 placeholder='Имя'
@@ -57,7 +58,7 @@ const ProfileForm = () => {
             />
             {form.isChanged && (
                 <div className={styles.ButtonGroup}>
-                <Button htmlType='submit' onClick={handleSave}>Сохранить</Button>
+                <Button htmlType='submit' disabled={!isFormValid}>Сохранить</Button>
                 <Button htmlType='button' type='secondary' onClick={handleCancel}>Отменить</Button>
             </div>
             )}

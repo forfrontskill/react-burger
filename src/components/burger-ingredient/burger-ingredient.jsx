@@ -8,12 +8,12 @@ import { IngredientType } from "../../utils/objects";
 
 import style from './burger-ingredient.module.css';
 
-const BurgerIngredient = ({ingredient, onClick}) => {
-    const {image, price, name,} = ingredient;
+const BurgerIngredient = ({ ingredient, onClick }) => {
+    const { image, price, name, } = ingredient;
 
     const ingredientCount = useSelector(store => store.order.ingredientCount);
     const count = ingredientCount[ingredient._id];
-    const [,dragRef] = useDrag({
+    const [, dragRef] = useDrag({
         type: 'ingredient',
         item: ingredient,
         collect: monitor => ({
@@ -22,15 +22,15 @@ const BurgerIngredient = ({ingredient, onClick}) => {
     });
 
     return (
-        <div className={style.BurgerIngredient} onClick={onClick(ingredient)} ref={dragRef}>
-            <img className={style.Image} src={image} alt={name}/>
-            <span className={'text text_type_digits-default ' + style.Price}>
+            <div className={style.BurgerIngredient} onClick={onClick(ingredient)} ref={dragRef}>
+                <img className={style.Image} src={image} alt={name} />
+                <span className={'text text_type_digits-default ' + style.Price}>
                     {price}
-                    <CurrencyIcon type="primary"/>
-            </span>
-            <p className={'text text_type_main-small ' + style.Name}>{name}</p>
-            {count && <Counter count={count} size="default" />}
-        </div>
+                    <CurrencyIcon type="primary" />
+                </span>
+                <p className={'text text_type_main-small ' + style.Name}>{name}</p>
+                {count && <Counter count={count} size="default" />}
+            </div>
     )
 }
 

@@ -1,9 +1,9 @@
 import React from "react";
 import { NavLink, Switch } from 'react-router-dom'
-import { useAuth } from "../../services/auth/auth";
-import OrderHistory from "../order-history/order-history";
-import ProfileForm from "../profile-form/profile-form";
-import ProtectedRoute from "../protected-route/protected-route";
+import { useAuth } from "../../hooks/useAuth";
+import OrderHistory from "../../components/order-history/order-history";
+import ProfileForm from "../../components/profile-form/profile-form";
+import ProtectedRoute from "../../components/protected-route/protected-route";
 
 import styles from './profile.module.css';
 

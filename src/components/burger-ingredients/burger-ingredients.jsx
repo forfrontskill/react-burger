@@ -1,24 +1,22 @@
 import React, { useState, useMemo, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, Route } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import Title from "../title/title";
-import Modal from "../modal/modal";
 import BurgerIngredientsGroup from "../burger-ingredients-group/burger-ingredients-group";
 import { ingredientFilter } from '../../utils/utils';
-import IngredientDetails from "../ingredient-details/ingredient-details";
 
-import { CLOSE_INGREDIENT_MODAL, OPEN_INGREDIENT_MODAL } from "../../services/actions/menu";
+import { OPEN_INGREDIENT_MODAL } from "../../services/actions/menu";
 
 import style from './burger-ingredients.module.css';
 
 const BurgerIngredients = () => {
     const dispatch = useDispatch();
     const history = useHistory();
+    const location = useLocation();
 
     const ingredients = useSelector(store => store.menu.items);
-    const { showIngredientModalInfo, modalIngredient } = useSelector(store => store.menu);
 
     const ContainerIngredientsRef = useRef();
     const bunRef = useRef();
@@ -58,18 +56,14 @@ const BurgerIngredients = () => {
 
     const redirectModalUrl = useCallback(
         (id) => {
-            history.push({ pathname: `/ingredients/${id}` }, { fromModal: true });
+            history.push({ pathname: `/ingredients/${id}` }, { modal: location });
         },
-        [history]
+        [history, location]
     );
 
     const handleModalOpen = (ingredient) => () => {
         dispatch({ type: OPEN_INGREDIENT_MODAL, ingredient });
         redirectModalUrl(ingredient._id);
-    }
-    const handleModalClose = () => {
-        history.push({ pathname: `/` }, { fromModal: false });
-        dispatch({ type: CLOSE_INGREDIENT_MODAL });
     }
 
     return (
@@ -91,13 +85,6 @@ const BurgerIngredients = () => {
                 <BurgerIngredientsGroup id='main' list={mainList.main} title='Начинки' onClick={handleModalOpen} refHead={mainRef} />
                 <BurgerIngredientsGroup id='sauce' list={mainList.sauce} title='Соусы' onClick={handleModalOpen} refHead={sauceRef} />
             </div>
-            {showIngredientModalInfo && (
-                <Route path='/ingredients/:id' render={()=>{ return(
-                    <Modal onClose={handleModalClose} title='Детали ингредиента'>
-                        <IngredientDetails ingredient={modalIngredient} />
-                    </Modal>
-                )}}/>
-            )}
         </section>
     )
 };

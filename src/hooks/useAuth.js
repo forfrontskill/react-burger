@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserInfo, login, logout, registeration, updateUserInfo } from '../actions/user';
-import { AuthContext } from '../appContext'
+import { getUserInfo, login, logout, registeration, updateUserInfo } from '../services/actions/user';
+import { AuthContext } from '../services/appContext'
 
 
 export function ProvideAuth({ children }) {
