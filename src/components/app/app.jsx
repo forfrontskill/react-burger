@@ -34,8 +34,7 @@ const App = () => {
         dispatch(getUserInfo());
     }, [dispatch])
 
-    const handleModalClose = (e) => {
-        e.stopPropagation();
+    const handleModalClose = () => {
         history.goBack();
         dispatch({ type: CLOSE_INGREDIENT_MODAL });
     }
