@@ -1,0 +1,10 @@
+.ErrorPage {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.ErrorMessage {
+    padding-top: 50px;
+}
