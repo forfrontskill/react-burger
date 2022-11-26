@@ -11,7 +11,7 @@
     "@types/node": "^16.11.56",
     "@types/react": "^16.8.6",
     "@types/react-dom": "^16.8.6",
-    "@ya.praktikum/react-developer-burger-ui-components": "^1.13.5",
+    "@ya.praktikum/react-developer-burger-ui-components": "^1.14.0",
     "i": "^0.3.7",
     "npm": "^8.19.2",
     "prop-types": "^15.8.1",
