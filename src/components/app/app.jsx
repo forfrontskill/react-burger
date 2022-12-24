@@ -17,50 +17,73 @@ import IngredientDetailsPage from "../ingrdient-details-page/ingrdient-details-p
 import OrderConstructor from "../../pages/order-constructor/order-constructor";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
+import Feed from "../../pages/feed/feed";
+import OrderDetailedStatus from "../order-detailed-status/order-detailed-status";
+import Order from "../../pages/order/order";
 
 
 
 const App = () => {
 
     const dispatch = useDispatch();
-    let location = useLocation();
+    const location = useLocation();
     const history = useHistory();
 
-    let isFromModal = location.state && location.state.modal;
+    const isFromModal = location.state && location.state.modal;
 
+    const isFromFeedOrderStatusModal = location.state && location.state.feedOrderStatusModal;
+    const isFromProfileOrderStatusModal = location.state && location.state.profileOrderStatusModal;
 
     useEffect(() => {
         dispatch(getMenu());
         dispatch(getUserInfo());
     }, [dispatch])
 
-    const handleModalClose = () => {
+    const handleIngredientModalClose = () => {
         history.goBack();
         dispatch({ type: CLOSE_INGREDIENT_MODAL });
+    }
+
+    const handleOrderStatusModalClose = () => {
+        history.goBack();
     }
 
     return (
         <ProvideAuth>
             <AppHeader />
-            <Switch location={isFromModal || location}>
-                <Route path='/login' exact={true}>
+            <Switch location={
+                isFromProfileOrderStatusModal
+                || isFromFeedOrderStatusModal
+                || isFromModal
+                || location
+            }>
+                <Route path='/login' exact>
                     <Login />
                 </Route>
-                <Route path='/register' exact={true}>
+                <Route path='/feed' exact>
+                    <Feed />
+                </Route>
+                <Route path='/register' exact>
                     <Register />
                 </Route>
-                <Route path='/forgot-password' exact={true}>
+                <Route path='/forgot-password' exact>
                     <ForgotPassword />
                 </Route>
-                    <Route path='/reset-password' exact={true}>
-                        <ResetPassword />
-                    </Route>
+                <Route path='/reset-password' exact>
+                    <ResetPassword />
+                </Route>
                 <Route path='/' exact>
                     <OrderConstructor />
                 </Route>
                 <Route path='/ingredients/:id' >
                     <IngredientDetailsPage />
                 </Route>
+                <Route path='/feed/:id'>
+                    <Order />
+                </Route>
+                <ProtectedRoute path='/profile/orders/:id'>
+                    <Order />
+                </ProtectedRoute>
                 <ProtectedRoute path='/profile'>
                     <Profile />
                 </ProtectedRoute>
@@ -68,14 +91,30 @@ const App = () => {
                     <ErrorPage />
                 </Route>
             </Switch>
-            
+
             {(isFromModal) && (
                 <Route path='/ingredients/:id'>
-                    <Modal onClose={handleModalClose} title='Детали ингредиента'>
-                            <IngredientDetails />
-                        </Modal>
+                    <Modal onClose={handleIngredientModalClose} title='Детали ингредиента'>
+                        <IngredientDetails />
+                    </Modal>
                 </Route>
             )}
+
+            {(isFromFeedOrderStatusModal) && (
+                <Route path='/feed/:id'>
+                    <Modal onClose={handleOrderStatusModalClose}>
+                        <OrderDetailedStatus />
+                    </Modal>
+                </Route>
+            )}
+            {(isFromProfileOrderStatusModal) && (
+                <ProtectedRoute path='/profile/orders/:id'>
+                    <Modal onClose={handleOrderStatusModalClose}>
+                        <OrderDetailedStatus />
+                    </Modal>
+                </ProtectedRoute>
+            )}
+
         </ProvideAuth>
 
     )
