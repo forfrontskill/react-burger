@@ -3,7 +3,7 @@ import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
 
 import AppHeader from '../../components/app-header/app-header';
 import { useDispatch } from "react-redux";
-import { CLOSE_INGREDIENT_MODAL, getMenu } from "../../services/actions/menu";
+import { closeIngredientModal, getMenu } from "../../services/actions/menu";
 import ProtectedRoute from "../protected-route/protected-route";
 import ForgotPassword from "../../pages/forgot-password/forgot-password";
 import Register from "../../pages/register/register";
@@ -41,7 +41,7 @@ const App = () => {
 
     const handleIngredientModalClose = () => {
         history.goBack();
-        dispatch({ type: CLOSE_INGREDIENT_MODAL });
+        dispatch(closeIngredientModal());
     }
 
     const handleOrderStatusModalClose = () => {

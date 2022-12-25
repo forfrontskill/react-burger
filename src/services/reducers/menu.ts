@@ -1,22 +1,34 @@
+import { TMenuActions } from "../actions/menu";
 import {
-    CLOSE_INGREDIENT_MODAL,
     GET_MENU_REQUEST,
+    GET_MENU_REQUEST_SUCCESS,
     GET_MENU_REQUEST_FAILED,
     GET_MENU_REQUEST_FINISH,
-    GET_MENU_REQUEST_SUCCESS,
-    OPEN_INGREDIENT_MODAL
-} from '../actions/menu';
+    OPEN_INGREDIENT_MODAL,
+    CLOSE_INGREDIENT_MODAL
+} from "../constants/menu";
+import { TIngredient } from '../types/data';
 
-const initialState = {
+type TMenuState = {
+    items: TIngredient[];
+    itemsRequest: boolean;
+    itemsRequestFailed: boolean;
+    itemsRequestFailedMessage?: string;
+    showIngredientModalInfo: boolean;
+    modalIngredient?: TIngredient;
+}
+
+const initialState: TMenuState = {
     items: [],
     itemsRequest: true,
     itemsRequestFailed: false,
     itemsRequestFailedMessage: '',
     showIngredientModalInfo: false,
-    modalIngredient: {}
+    //FIXME: check was {} mock
+    modalIngredient: undefined
 };
 
-export const menuReducer = (state = initialState, action) => {
+export const menuReducer = (state = initialState, action: TMenuActions) => {
     switch (action.type) {
         case GET_MENU_REQUEST_SUCCESS: {
             return {

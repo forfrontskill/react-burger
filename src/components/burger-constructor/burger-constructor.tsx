@@ -10,7 +10,13 @@ import style from './burger-constructor.module.css';
 import OrderDetails from "../order-details/order-details";
 import Modal from "../modal/modal";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_INGREDIENTS, CLOSE_ORDER_MODAL, createOrder, DELETE_INGREDIENT_FROM_ORDER, MOVE_INGREDIENT_IN_ORDER } from "../../services/actions/order";
+import {
+    addIngredients,
+    closeOrderModal,
+    createOrder,
+    deleteIngredientFromOrder,
+    moveIngredientInOrder
+} from "../../services/actions/order";
 import { uuidv4 } from "../../utils/utils";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -19,46 +25,46 @@ import { useAuth } from "../../hooks/useAuth";
 const BurgerConstructor = () => {
     const dispatch = useDispatch();
     const history = useHistory();
-
-    const {user} = useAuth();
+    //@ts-ignore
+    const { user } = useAuth();
 
     const [, dropTarget] = useDrop({
         accept: "ingredient",
         drop(ingredient) {
-            dispatch({
-                type: ADD_INGREDIENTS,
-                ingredient: { ...ingredient, key: uuidv4() }
-            });
+            //@ts-ignore
+            const ingr = { ...ingredient, key: uuidv4() };
+            dispatch(addIngredients(ingr))
         },
     });
-
+    //@ts-ignore
     const order = useSelector(store => store.order);
 
     const price = order.price;
     const ingredientWithoutBuns = order.ingredients;
     const bun = order.bun;
-    const isEmptyBun = Object.keys(bun).length !== 0;
+    const isEmptyBun = bun && Object.keys(bun).length !== 0;
 
     const orderStatus = order.orderRequest ? 'Заказываем...' : 'Оформить заказ';
 
     const handleCreateOrder = () => {
-        if(user.name){
+        if (user.name) {
+            //@ts-ignore
             dispatch(createOrder(order.orderIds));
         } else {
-            history.replace({ pathname: '/login'});
+            history.replace({ pathname: '/login' });
         }
     }
 
     const handleCloseOrderModal = () => {
-        dispatch({ type: CLOSE_ORDER_MODAL });
+        dispatch(closeOrderModal());
     }
 
     const moveIngr = useCallback((dragIndex, hoverIndex) => {
-        dispatch({ type: MOVE_INGREDIENT_IN_ORDER, dragIndex, hoverIndex });
+        dispatch(moveIngredientInOrder(dragIndex, hoverIndex));
     }, [dispatch]);
 
-    const handleDelete = (key) => {
-        dispatch({ type: DELETE_INGREDIENT_FROM_ORDER, key });
+    const handleDelete = (key: string) => {
+        dispatch(deleteIngredientFromOrder(key));
     }
 
     return (
@@ -76,6 +82,7 @@ const BurgerConstructor = () => {
                 </div>
             )}
             <div className={style.Recipes}>
+                {/* @ts-ignore */}
                 {ingredientWithoutBuns.map((burgerElement, index) => {
                     return (<BurgerConstructorElement
                         key={burgerElement.key}

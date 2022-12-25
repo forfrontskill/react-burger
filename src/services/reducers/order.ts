@@ -1,4 +1,5 @@
 import {  countIngredients, moveElementInArray } from "../../utils/utils";
+import { TOrderActions } from "../actions/order";
 import {
     ADD_INGREDIENTS,
     CLOSE_ORDER_MODAL,
@@ -8,17 +9,32 @@ import {
     CREATE_ORDER_REQUEST_SUCCESS,
     DELETE_INGREDIENT_FROM_ORDER,
     MOVE_INGREDIENT_IN_ORDER
-} from "../actions/order";
+} from "../constants/order";
+import { TIngredientOrderCount, TIngredientOrder } from '../types/data';
 
+type TOrderState = {
+    count: number;
+    price: number;
+    bun?: TIngredientOrder;
+    ingredients: TIngredientOrder[];
+    ingredientCount: TIngredientOrderCount[];
+    orderIds: string[];
+    orderNumber?: number;
+    orderRequest: boolean;
+    orderRequestFailed: boolean;
+    orderRequestFailedMessage?: string;
+    showOrderModalInfo: boolean;
+    isCanCreateOrder: boolean;
+}
 
-const initialState = {
+const initialState: TOrderState = {
     count: 0,
     price: 0,
-    bun: {},
+    bun: undefined,
     ingredients: [],
     ingredientCount:[],
     orderIds: [],
-    orderNumber: null,
+    orderNumber: undefined,
     orderRequest: false,
     orderRequestFailed: false,
     orderRequestFailedMessage: '',
@@ -26,20 +42,22 @@ const initialState = {
     isCanCreateOrder: false
 };
 
-export const orderReducer = (state = initialState, action) => {
+
+export const orderReducer = (state = initialState, action: TOrderActions) => {
     switch (action.type) {
         case ADD_INGREDIENTS: {
-            const preparedIngredient = { ...action.ingredient }
-            const bun = preparedIngredient.type === 'bun' ? preparedIngredient : { ...state.bun };
-            const ingredients = preparedIngredient.type !== 'bun' ? [...state.ingredients, preparedIngredient] : [...state.ingredients];
+            const preparedIngredient: TIngredientOrder = { ...action.ingredient };
+            //@ts-ignore
+            const bun:TIngredientOrder  = preparedIngredient.type === 'bun' ? preparedIngredient : { ...state.bun };
+            const ingredients: TIngredientOrder[] = preparedIngredient.type !== 'bun' ? [...state.ingredients, preparedIngredient] : [...state.ingredients];
 
-            const allIngredients = [bun, bun, ...ingredients];
+            const allIngredients: TIngredientOrder[] = [bun, bun, ...ingredients];
 
             const price = allIngredients.reduce((acc, item) => {
 
                 return Object.keys(item).length !== 0 ? acc + item.price : acc;
             }, 0);
-
+            //@ts-ignore
             const orderIds = allIngredients.reduce((acc, item) => {
                 return [...acc, item._id];
             }, []);
@@ -109,7 +127,6 @@ export const orderReducer = (state = initialState, action) => {
             }
         }
         case DELETE_INGREDIENT_FROM_ORDER: {
-            
             const newIngredients = [...state.ingredients].filter(ingr => ingr.key !== action.key);
             return {
                 ...state,

@@ -6,10 +6,10 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import Title from "../title/title";
 import BurgerIngredientsGroup from "../burger-ingredients-group/burger-ingredients-group";
 import { ingredientFilter } from '../../utils/utils';
-
-import { OPEN_INGREDIENT_MODAL } from "../../services/actions/menu";
+import { openIngredientModal } from "../../services/actions/menu";
 
 import style from './burger-ingredients.module.css';
+
 
 const BurgerIngredients = () => {
     const dispatch = useDispatch();
@@ -62,7 +62,7 @@ const BurgerIngredients = () => {
     );
 
     const handleModalOpen = (ingredient) => () => {
-        dispatch({ type: OPEN_INGREDIENT_MODAL, ingredient });
+        dispatch(openIngredientModal(ingredient));
         redirectModalUrl(ingredient._id);
     }
 
