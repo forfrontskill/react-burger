@@ -18,3 +18,9 @@ export type TIngredientOrder = TIngredient & {readonly key: string};
 export type TIngredientOrderCount = {
     [id: string]: number;
 }
+
+export type TUser = {
+    name: string;
+    email: string;
+    password: string;
+}

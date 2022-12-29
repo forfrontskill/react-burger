@@ -1,3 +1,4 @@
+import { TUserActions } from "../actions/user";
 import {
     LOGIN_RQUEST,
     LOGIN_RQUEST_FAILED,
@@ -23,9 +24,33 @@ import {
     UPDATE_USER_RQUEST_FAILED,
     UPDATE_USER_RQUEST_FINISH,
     UPDATE_USER_RQUEST_SUCCESS
-} from "../actions/user"
+} from "../constants/user"
 
-const initialState = {
+type TUserStateRequestDictionary =
+    | 'LOGIN_RQUEST'
+    | 'REGISTER_RQUEST'
+    | 'LOGOUT_RQUEST'
+    | 'REFRESH_TOKEN_RQUEST'
+    | 'GET_USER_RQUEST'
+    | 'UPDATE_USER_RQUEST';
+
+type TUserStateRequestStatus = {
+    request: boolean;
+    requestFailed: boolean;
+    requestFailedMessage?: string;
+}
+
+type TUserState = {
+    isAuthNeed: boolean;
+    email?: string;
+    password?: string;
+    name?: string;
+} & {
+        [reqName in TUserStateRequestDictionary]: TUserStateRequestStatus;
+    }
+
+
+const initialState: TUserState = {
     isAuthNeed: true,
     email: '',
     password: '',
@@ -63,7 +88,7 @@ const initialState = {
 
 }
 
-export const userReducer = (state = initialState, action) => {
+export const userReducer = (state = initialState, action:TUserActions) => {
     switch (action.type) {
         case LOGIN_RQUEST: {
             return {
@@ -142,8 +167,8 @@ export const userReducer = (state = initialState, action) => {
         case LOGOUT_RQUEST_SUCCESS: {
             return {
                 ...state,
-                email:'',
-                name:'',
+                email: '',
+                name: '',
             }
         }
         case LOGOUT_RQUEST_FAILED: {
@@ -199,7 +224,7 @@ export const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 [GET_USER_RQUEST]: { ...state[GET_USER_RQUEST], request: false },
-                isAuthNeed:false
+                isAuthNeed: false
             }
         }
         case GET_USER_RQUEST_SUCCESS: {
