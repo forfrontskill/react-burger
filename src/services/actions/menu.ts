@@ -72,11 +72,11 @@ export const closeIngredientModal = (): ICloseIngredientModalAction => ({
 })
 
 export function getMenu() {
-    //@ts-ignore
+    // @ts-ignore
     return function (dispatch) {
         dispatch(getMenuRequest());
         getIngredients()
-        //@ts-ignore
+            //@ts-ignore
             .then(({ data }) => {
                 dispatch(getMenuRequestSuccess(data))
             })

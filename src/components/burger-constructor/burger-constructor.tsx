@@ -31,12 +31,12 @@ const BurgerConstructor = () => {
     const [, dropTarget] = useDrop({
         accept: "ingredient",
         drop(ingredient) {
-            //@ts-ignore
+            // @ts-ignore
             const ingr = { ...ingredient, key: uuidv4() };
             dispatch(addIngredients(ingr))
         },
     });
-    //@ts-ignore
+    // @ts-ignore
     const order = useSelector(store => store.order);
 
     const price = order.price;
@@ -48,7 +48,7 @@ const BurgerConstructor = () => {
 
     const handleCreateOrder = () => {
         if (user.name) {
-            //@ts-ignore
+            // @ts-ignore
             dispatch(createOrder(order.orderIds));
         } else {
             history.replace({ pathname: '/login' });

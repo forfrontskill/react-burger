@@ -74,7 +74,6 @@ interface ILogoutRequestFinishAction {
 
 interface ILogoutRequestSuccessAction {
     readonly type: typeof LOGOUT_RQUEST_SUCCESS;
-    readonly user: TUser;
 };
 
 interface ILogoutRequestFailedAction {
@@ -207,9 +206,8 @@ export const logoutRequestFinishAction = (): ILogoutRequestFinishAction => ({
     type: LOGOUT_RQUEST_FINISH,
 });
 
-export const logoutRequestSuccessAction = (user: Readonly<TUser>): ILogoutRequestSuccessAction => ({
-    type: LOGOUT_RQUEST_SUCCESS,
-    user
+export const logoutRequestSuccessAction = (): ILogoutRequestSuccessAction => ({
+    type: LOGOUT_RQUEST_SUCCESS
 });
 
 export const logoutRequestFailedAction = (err: string): ILogoutRequestFailedAction => ({
@@ -235,38 +233,38 @@ export const refreshTokenRequestFailedAction = (err: string): IRefreshTokenReque
     err
 });
 
-export const getUserRequestAction = ():IGetUserRequestAction => ({
+export const getUserRequestAction = (): IGetUserRequestAction => ({
     type: GET_USER_RQUEST,
 });
 
-export const getUserRequestFinishAction = ():IGetUserRequestFinishAction => ({
+export const getUserRequestFinishAction = (): IGetUserRequestFinishAction => ({
     type: GET_USER_RQUEST_FINISH,
 });
 
-export const getUserRequestSuccessAction = (user: Readonly<TUser>):IGetUserRequestSuccessAction => ({
-    type:GET_USER_RQUEST_SUCCESS,
+export const getUserRequestSuccessAction = (user: Readonly<TUser>): IGetUserRequestSuccessAction => ({
+    type: GET_USER_RQUEST_SUCCESS,
     user
 });
 
-export const getUserRequestFailedAction = (err: string):IGetUserRequestFailedAction => ({
+export const getUserRequestFailedAction = (err: string): IGetUserRequestFailedAction => ({
     type: GET_USER_RQUEST_FAILED,
     err
 });
 
-export const updateUserRequestAction = ():IUpdateUserRequestAction => ({
+export const updateUserRequestAction = (): IUpdateUserRequestAction => ({
     type: UPDATE_USER_RQUEST,
 });
 
-export const updateUserRequestFinishAction = ():IUpdateUserRequestFinishAction => ({
+export const updateUserRequestFinishAction = (): IUpdateUserRequestFinishAction => ({
     type: UPDATE_USER_RQUEST_FINISH,
 });
 
-export const updateUserRequestSuccessAction = (user: Readonly<TUser>):IUpdateUserRequestSuccessAction => ({
+export const updateUserRequestSuccessAction = (user: Readonly<TUser>): IUpdateUserRequestSuccessAction => ({
     type: UPDATE_USER_RQUEST_SUCCESS,
     user
 });
 
-export const updateUserRequestFailedAction = (err:string):IUpdateUserRequestFailedAction => ({
+export const updateUserRequestFailedAction = (err: string): IUpdateUserRequestFailedAction => ({
     type: UPDATE_USER_RQUEST_FAILED,
     err
 });
@@ -275,7 +273,7 @@ export const updateUserRequestFailedAction = (err:string):IUpdateUserRequestFail
 export function login(form) {
     //@ts-ignore
     return function (dispatch) {
-        dispatch({ type: LOGIN_RQUEST });
+        dispatch(loginRequestAction());
         loginRequest(form)
             //@ts-ignore
             .then(res => {
@@ -290,19 +288,14 @@ export function login(form) {
                     setCookie('refreshToken', res.refreshToken);
                 }
 
-                dispatch({ type: LOGIN_RQUEST_SUCCESS, user: res.user });
+                dispatch(loginRequestSuccessAction(res.user));
             })
             //@ts-ignore
             .catch(err => {
-                dispatch({
-                    type: LOGIN_RQUEST_FAILED,
-                    err
-                })
+                dispatch(loginRequestFailedAction(err))
             })
             .finally(() => {
-                dispatch({
-                    type: LOGIN_RQUEST_FINISH
-                })
+                dispatch(loginRequestFinishAction())
             })
     }
 }
@@ -311,7 +304,7 @@ export function login(form) {
 export function registeration(form) {
     //@ts-ignore
     return function (dispatch) {
-        dispatch({ type: REGISTER_RQUEST });
+        dispatch(registerRequestAction());
         registerRequest(form)
             //@ts-ignore
             .then(res => {
@@ -326,19 +319,14 @@ export function registeration(form) {
                     setCookie('refreshToken', res.refreshToken);
                 }
 
-                dispatch({ type: REGISTER_RQUEST_SUCCESS, user: res.user })
+                dispatch(registerRequestSuccessAction(res.user))
             })
             //@ts-ignore
             .catch(err => {
-                dispatch({
-                    type: REGISTER_RQUEST_FAILED,
-                    err
-                })
+                dispatch(registerRequestFailedAction(err))
             })
             .finally(() => {
-                dispatch({
-                    type: REGISTER_RQUEST_FINISH
-                })
+                dispatch(registerRequestFinishAction())
             })
     }
 }
@@ -346,7 +334,7 @@ export function registeration(form) {
 export function logout() {
     //@ts-ignore
     return function (dispatch) {
-        dispatch({ type: LOGOUT_RQUEST });
+        dispatch(logoutRequestAction());
         const refreshToken = getCookie('refreshToken');
         logoutRequest(refreshToken)
             //@ts-ignore
@@ -354,20 +342,15 @@ export function logout() {
                 if (res.success) {
                     deleteCookie('refreshToken');
                     deleteCookie('token');
-                    dispatch({ type: LOGOUT_RQUEST_SUCCESS })
+                    dispatch(logoutRequestSuccessAction())
                 }
             })
             //@ts-ignore
             .catch(err => {
-                dispatch({
-                    type: LOGOUT_RQUEST_FAILED,
-                    err
-                })
+                dispatch(logoutRequestFailedAction(err))
             })
             .finally(() => {
-                dispatch({
-                    type: LOGOUT_RQUEST_FINISH
-                })
+                dispatch(logoutRequestFinishAction())
             })
     }
 }
@@ -375,23 +358,18 @@ export function logout() {
 export function getUserInfo() {
     //@ts-ignore
     return function (dispatch) {
-        dispatch({ type: GET_USER_RQUEST });
+        dispatch(getUserRequestAction());
         getUserRequest()
             //@ts-ignore
             .then(res => {
-                dispatch({ type: GET_USER_RQUEST_SUCCESS, user: res.user })
+                dispatch(getUserRequestSuccessAction(res.user))
             })
             //@ts-ignore
             .catch(err => {
-                dispatch({
-                    type: GET_USER_RQUEST_FAILED,
-                    err
-                })
+                dispatch(getUserRequestFailedAction(err))
             })
             .finally(() => {
-                dispatch({
-                    type: GET_USER_RQUEST_FINISH
-                })
+                dispatch(getUserRequestFinishAction())
             })
     }
 }
@@ -400,23 +378,18 @@ export function getUserInfo() {
 export function updateUserInfo(form) {
     //@ts-ignore
     return function (dispatch) {
-        dispatch({ type: UPDATE_USER_RQUEST });
+        dispatch(updateUserRequestAction());
         updateUserRequest(form)
             //@ts-ignore
             .then(res => {
-                dispatch({ type: UPDATE_USER_RQUEST_SUCCESS, user: res.user })
+                dispatch(updateUserRequestSuccessAction(res.user));
             })
             //@ts-ignore
             .catch(err => {
-                dispatch({
-                    type: UPDATE_USER_RQUEST_FAILED,
-                    err
-                })
+                dispatch(updateUserRequestFailedAction(err));
             })
             .finally(() => {
-                dispatch({
-                    type: UPDATE_USER_RQUEST_FINISH
-                })
+                dispatch(updateUserRequestFinishAction());
             })
     }
 }
