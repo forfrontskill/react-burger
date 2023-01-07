@@ -25,6 +25,7 @@ import {
     UPDATE_USER_RQUEST_FINISH,
     UPDATE_USER_RQUEST_SUCCESS
 } from "../constants/user"
+import { TUser } from "../types/data";
 
 type TUserStateRequestDictionary =
     | 'LOGIN_RQUEST'
@@ -40,12 +41,7 @@ type TUserStateRequestStatus = {
     requestFailedMessage?: string;
 }
 
-type TUserState = {
-    isAuthNeed: boolean;
-    email?: string;
-    password?: string;
-    name?: string;
-} & {
+export type TUserState = TUser & {
         [reqName in TUserStateRequestDictionary]: TUserStateRequestStatus;
     }
 
@@ -88,7 +84,7 @@ const initialState: TUserState = {
 
 }
 
-export const userReducer = (state = initialState, action:TUserActions) => {
+export const userReducer = (state = initialState, action:TUserActions):TUserState => {
     switch (action.type) {
         case LOGIN_RQUEST: {
             return {

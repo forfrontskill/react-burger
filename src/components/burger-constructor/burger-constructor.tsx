@@ -9,7 +9,6 @@ import BurgerConstructorElement from "../burger-constructor-element/burger-const
 import style from './burger-constructor.module.css';
 import OrderDetails from "../order-details/order-details";
 import Modal from "../modal/modal";
-import { useDispatch, useSelector } from "react-redux";
 import {
     addIngredients,
     closeOrderModal,
@@ -19,24 +18,24 @@ import {
 } from "../../services/actions/order";
 import { uuidv4 } from "../../utils/utils";
 import { useAuth } from "../../hooks/useAuth";
+import { useDispatch, useSelector } from "../../hooks/hooks";
+import { TIngredient, TIngredientOrder } from "../../services/types/data";
 
 
 
 const BurgerConstructor = () => {
     const dispatch = useDispatch();
     const history = useHistory();
-    //@ts-ignore
+
     const { user } = useAuth();
 
     const [, dropTarget] = useDrop({
         accept: "ingredient",
-        drop(ingredient) {
-            // @ts-ignore
-            const ingr = { ...ingredient, key: uuidv4() };
+        drop(ingredient:TIngredient) {
+            const ingr: TIngredientOrder = { ...ingredient, key: uuidv4() };
             dispatch(addIngredients(ingr))
         },
     });
-    // @ts-ignore
     const order = useSelector(store => store.order);
 
     const price = order.price;
@@ -48,8 +47,7 @@ const BurgerConstructor = () => {
 
     const handleCreateOrder = () => {
         if (user.name) {
-            // @ts-ignore
-            dispatch(createOrder(order.orderIds));
+            dispatch(createOrder(order.orderIds || []));
         } else {
             history.replace({ pathname: '/login' });
         }
@@ -82,7 +80,6 @@ const BurgerConstructor = () => {
                 </div>
             )}
             <div className={style.Recipes}>
-                {/* @ts-ignore */}
                 {ingredientWithoutBuns.map((burgerElement, index) => {
                     return (<BurgerConstructorElement
                         key={burgerElement.key}
@@ -117,7 +114,7 @@ const BurgerConstructor = () => {
             </div>
             {order.showOrderModalInfo &&
                 <Modal onClose={handleCloseOrderModal}>
-                    <OrderDetails orderNumber={order.orderNumber} />
+                    <OrderDetails orderNumber={order.orderNumber || 0} />
                 </Modal>
             }
         </section>

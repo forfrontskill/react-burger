@@ -26,7 +26,8 @@ import {
     UPDATE_USER_RQUEST_FINISH,
     UPDATE_USER_RQUEST_SUCCESS
 } from "../constants/user";
-import { TUser } from "../types/data";
+import { AppDispatch } from "../types";
+import { TFormLogin, TFormRegister, TUser } from "../types/data";
 
 interface ILoginRequestAction {
     readonly type: typeof LOGIN_RQUEST;
@@ -161,7 +162,6 @@ export type TUserActions =
     | TUserGetRequestActions
     | TUserUpdateRequestActions;
 
-//Actions Functions
 export const loginRequestAction = (): ILoginRequestAction => ({
     type: LOGIN_RQUEST,
 });
@@ -269,127 +269,100 @@ export const updateUserRequestFailedAction = (err: string): IUpdateUserRequestFa
     err
 });
 
-//@ts-ignore
-export function login(form) {
-    //@ts-ignore
-    return function (dispatch) {
-        dispatch(loginRequestAction());
-        loginRequest(form)
-            //@ts-ignore
-            .then(res => {
-                let authToken;
-                if (res.accessToken) {
-                    if (res.accessToken.indexOf('Bearer') === 0) {
-                        authToken = res.accessToken.split('Bearer ')[1];
-                    }
-                }
-                if (authToken) {
-                    setCookie('token', authToken);
-                    setCookie('refreshToken', res.refreshToken);
-                }
 
-                dispatch(loginRequestSuccessAction(res.user));
-            })
-            //@ts-ignore
-            .catch(err => {
-                dispatch(loginRequestFailedAction(err))
-            })
-            .finally(() => {
-                dispatch(loginRequestFinishAction())
-            })
-    }
+export const login = (form:TFormLogin) => (dispatch: AppDispatch) => {
+    dispatch(loginRequestAction());
+    loginRequest(form)
+        .then(res => {
+            let authToken;
+            if (res.accessToken) {
+                if (res.accessToken.indexOf('Bearer') === 0) {
+                    authToken = res.accessToken.split('Bearer ')[1];
+                }
+            }
+            if (authToken) {
+                setCookie('token', authToken);
+                setCookie('refreshToken', res.refreshToken);
+            }
+
+            dispatch(loginRequestSuccessAction(res.user));
+        })
+        .catch(err => {
+            dispatch(loginRequestFailedAction(err))
+        })
+        .finally(() => {
+            dispatch(loginRequestFinishAction())
+        })
 }
 
-//@ts-ignore
-export function registeration(form) {
-    //@ts-ignore
-    return function (dispatch) {
-        dispatch(registerRequestAction());
-        registerRequest(form)
-            //@ts-ignore
-            .then(res => {
-                let authToken;
-                if (res.accessToken) {
-                    if (res.accessToken.indexOf('Bearer') === 0) {
-                        authToken = res.accessToken.split('Bearer ')[1];
-                    }
+export const registeration = (form: TFormRegister) => (dispatch: AppDispatch) => {
+    dispatch(registerRequestAction());
+    registerRequest(form)
+        .then(res => {
+            let authToken;
+            if (res.accessToken) {
+                if (res.accessToken.indexOf('Bearer') === 0) {
+                    authToken = res.accessToken.split('Bearer ')[1];
                 }
-                if (authToken) {
-                    setCookie('token', authToken);
-                    setCookie('refreshToken', res.refreshToken);
-                }
+            }
+            if (authToken) {
+                setCookie('token', authToken);
+                setCookie('refreshToken', res.refreshToken);
+            }
 
-                dispatch(registerRequestSuccessAction(res.user))
-            })
-            //@ts-ignore
-            .catch(err => {
-                dispatch(registerRequestFailedAction(err))
-            })
-            .finally(() => {
-                dispatch(registerRequestFinishAction())
-            })
-    }
+            dispatch(registerRequestSuccessAction(res.user))
+        })
+        .catch(err => {
+            dispatch(registerRequestFailedAction(err))
+        })
+        .finally(() => {
+            dispatch(registerRequestFinishAction())
+        })
 }
 
-export function logout() {
-    //@ts-ignore
-    return function (dispatch) {
-        dispatch(logoutRequestAction());
-        const refreshToken = getCookie('refreshToken');
-        logoutRequest(refreshToken)
-            //@ts-ignore
-            .then(res => {
-                if (res.success) {
-                    deleteCookie('refreshToken');
-                    deleteCookie('token');
-                    dispatch(logoutRequestSuccessAction())
-                }
-            })
-            //@ts-ignore
-            .catch(err => {
-                dispatch(logoutRequestFailedAction(err))
-            })
-            .finally(() => {
-                dispatch(logoutRequestFinishAction())
-            })
-    }
+export const logout = () => (dispatch: AppDispatch) => {
+    dispatch(logoutRequestAction());
+    const refreshToken = getCookie('refreshToken');
+    logoutRequest({ token: refreshToken || '' })
+        .then(res => {
+            if (res.success) {
+                deleteCookie('refreshToken');
+                deleteCookie('token');
+                dispatch(logoutRequestSuccessAction())
+            }
+        })
+        .catch(err => {
+            dispatch(logoutRequestFailedAction(err))
+        })
+        .finally(() => {
+            dispatch(logoutRequestFinishAction())
+        })
 }
 
-export function getUserInfo() {
-    //@ts-ignore
-    return function (dispatch) {
-        dispatch(getUserRequestAction());
-        getUserRequest()
-            //@ts-ignore
-            .then(res => {
-                dispatch(getUserRequestSuccessAction(res.user))
-            })
-            //@ts-ignore
-            .catch(err => {
-                dispatch(getUserRequestFailedAction(err))
-            })
-            .finally(() => {
-                dispatch(getUserRequestFinishAction())
-            })
-    }
+export const getUserInfo = () => (dispatch: AppDispatch) => {
+    dispatch(getUserRequestAction());
+    getUserRequest()
+        .then(res => {
+            dispatch(getUserRequestSuccessAction(res.user))
+        })
+        .catch(err => {
+            dispatch(getUserRequestFailedAction(err))
+        })
+        .finally(() => {
+            dispatch(getUserRequestFinishAction())
+        })
 }
 
-//@ts-ignore
-export function updateUserInfo(form) {
-    //@ts-ignore
-    return function (dispatch) {
-        dispatch(updateUserRequestAction());
-        updateUserRequest(form)
-            //@ts-ignore
-            .then(res => {
-                dispatch(updateUserRequestSuccessAction(res.user));
-            })
-            //@ts-ignore
-            .catch(err => {
-                dispatch(updateUserRequestFailedAction(err));
-            })
-            .finally(() => {
-                dispatch(updateUserRequestFinishAction());
-            })
-    }
+export const updateUserInfo = (form: TUser) => (dispatch: AppDispatch) => {
+    dispatch(updateUserRequestAction());
+    updateUserRequest(form)
+        .then(res => {
+            dispatch(updateUserRequestSuccessAction(res.user));
+        })
+        .catch(err => {
+            dispatch(updateUserRequestFailedAction(err));
+        })
+        .finally(() => {
+            dispatch(updateUserRequestFinishAction());
+        })
 }

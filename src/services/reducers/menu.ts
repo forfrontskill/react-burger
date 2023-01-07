@@ -24,16 +24,15 @@ const initialState: TMenuState = {
     itemsRequestFailed: false,
     itemsRequestFailedMessage: '',
     showIngredientModalInfo: false,
-    //FIXME: check was {} mock
     modalIngredient: undefined
 };
 
-export const menuReducer = (state = initialState, action: TMenuActions) => {
+export const menuReducer = (state = initialState, action: TMenuActions):TMenuState => {
     switch (action.type) {
         case GET_MENU_REQUEST_SUCCESS: {
             return {
                 ...state,
-                items: action.items
+                items: [...action.items]
             }
         }
         case GET_MENU_REQUEST_FAILED: {
@@ -69,7 +68,7 @@ export const menuReducer = (state = initialState, action: TMenuActions) => {
             return {
                 ...state,
                 showIngredientModalInfo: false,
-                modalIngredient: {}
+                modalIngredient: undefined
             }
         }
         default: {

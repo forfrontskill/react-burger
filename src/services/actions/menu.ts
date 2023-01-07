@@ -7,6 +7,7 @@ import {
     OPEN_INGREDIENT_MODAL,
     CLOSE_INGREDIENT_MODAL
 } from "../constants/menu";
+import { AppDispatch } from "../types";
 import { TIngredient } from "../types/data";
 
 export interface IGetMenuRequestAction {
@@ -71,21 +72,16 @@ export const closeIngredientModal = (): ICloseIngredientModalAction => ({
     type: CLOSE_INGREDIENT_MODAL,
 })
 
-export function getMenu() {
-    // @ts-ignore
-    return function (dispatch) {
+export const getMenu = () => (dispatch: AppDispatch) => {
         dispatch(getMenuRequest());
         getIngredients()
-            //@ts-ignore
             .then(({ data }) => {
                 dispatch(getMenuRequestSuccess(data))
             })
-            //@ts-ignore
             .catch(err => {
                 dispatch(getMenuRequestFailed(err))
             })
             .finally(() => {
                 dispatch(getMenuRequestFinish())
             })
-    }
 }

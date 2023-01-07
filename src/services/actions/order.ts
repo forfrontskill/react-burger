@@ -10,6 +10,7 @@ import {
     DELETE_INGREDIENT_FROM_ORDER,
     MOVE_INGREDIENT_IN_ORDER
 } from "../constants/order";
+import { AppDispatch } from "../types";
 import { TIngredientOrder } from "../types/data";
 
 export interface IAddIngredientsAction {
@@ -98,21 +99,16 @@ export const moveIngredientInOrder = (dragIndex: number, hoverIndex: number): IM
     hoverIndex,
 })
 
-export function createOrder(orderIds: string[]) {
-    //@ts-ignore
-    return function (dispatch) {
+export const createOrder = (orderIds: string[]) => (dispatch: AppDispatch) => {
         dispatch(createOrderAction());
         createOrderRequest(orderIds)
-            //@ts-ignore
             .then((data) => {
                 dispatch(createOrderRequestSuccessAction(data.order.number));
             })
-            //@ts-ignore
             .catch(err => {
                 dispatch(createOrderRequestFailedAction(err))
             })
             .finally(() => {
                 dispatch(createOrderRequestFinishAction())
             })
-    }
-}
+};
