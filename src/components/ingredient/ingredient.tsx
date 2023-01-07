@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from 'prop-types';
 import IngredientDetailsCalorie from "../ingredient-details-calorie/ingredient-details-calorie";
 
 import styles from './ingredient.module.css';
@@ -26,15 +25,6 @@ const Ingrdient = ({ image, name, calories, carbohydrates, fat, proteins }: Prop
             </div>
         </div>
     )
-}
-
-Ingrdient.propTypes = {
-    image: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    calories: PropTypes.number.isRequired,
-    carbohydrates: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    proteins: PropTypes.number.isRequired
 }
 
 export default Ingrdient;

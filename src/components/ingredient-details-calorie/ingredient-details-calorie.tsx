@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from 'prop-types';
 
 import style from './ingredient-details-calorie.module.css';
 
@@ -17,9 +16,5 @@ const IngredientDetailsCalorie = ({ title, value }: Props) => {
     )
 }
 
-IngredientDetailsCalorie.propTypes = {
-    title: PropTypes.string.isRequired,
-    value: PropTypes.number.isRequired
-}
 
 export default IngredientDetailsCalorie;
