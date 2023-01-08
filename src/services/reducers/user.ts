@@ -28,12 +28,12 @@ import {
 import { TUser } from "../types/data";
 
 type TUserStateRequestDictionary =
-    | 'LOGIN_RQUEST'
-    | 'REGISTER_RQUEST'
-    | 'LOGOUT_RQUEST'
-    | 'REFRESH_TOKEN_RQUEST'
-    | 'GET_USER_RQUEST'
-    | 'UPDATE_USER_RQUEST';
+    | typeof LOGIN_RQUEST
+    | typeof REGISTER_RQUEST
+    | typeof LOGOUT_RQUEST
+    | typeof REFRESH_TOKEN_RQUEST
+    | typeof GET_USER_RQUEST
+    | typeof UPDATE_USER_RQUEST;
 
 type TUserStateRequestStatus = {
     request: boolean;

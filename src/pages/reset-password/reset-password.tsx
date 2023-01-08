@@ -1,5 +1,5 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import React, { useCallback } from "react";
+import React, { FormEvent, useCallback } from "react";
 import { useHistory, Redirect, useLocation } from 'react-router-dom';
 import { useAuth } from "../../hooks/useAuth";
 import { passwordResetConfirmRequest } from "../../utils/burger-api";
@@ -23,7 +23,7 @@ const ResetPassword = () => {
 
     const history = useHistory();
 
-    const handleSubmit = useCallback((e) => {
+    const handleSubmit = useCallback((e:FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         passwordResetConfirmRequest({
             password: form.password,

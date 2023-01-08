@@ -1,5 +1,5 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import React from "react";
+import React, { FormEvent } from "react";
 import { Redirect } from 'react-router-dom';
 import { useAuth } from "../../hooks/useAuth";
 import Question from "../../components/question/question";
@@ -17,7 +17,7 @@ const Register = () => {
         name: ''
     });
 
-    const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         auth.register({
             name: form.name,

@@ -4,7 +4,6 @@ import FeedStatus from "../../components/feed-status/feed-status";
 import OrderCard from "../../components/order-card/order-card";
 import { useDispatch, useSelector } from "../../hooks/hooks";
 import { wsFeedConnectionClose, wsFeedConnectionStart } from "../../services/actions/feed";
-import { TOrder } from "../../services/types/data";
 
 import styles from './feed.module.css';
 
@@ -39,7 +38,7 @@ const Feed = () => {
             <div className={styles.Feed}>
 
                 <div className={styles.Orders}>
-                    {orders.map((order: TOrder) => <OrderCard key={order._id} order={order} onClick={handleClick} />)}
+                    {orders.map(order => <OrderCard key={order._id} order={order} onClick={handleClick} />)}
                 </div>
                 <FeedStatus orders={orders} total={total} totalToday={totalToday} />
             </div>

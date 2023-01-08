@@ -9,21 +9,21 @@ const ORDER_DONE = 'done';
 const ORDER_IN_PROGRESS = 'pending';
 
 type Props = {
-    orders:TOrder[];
+    orders: TOrder[];
     total: number;
     totalToday: number;
 }
 
-const FeedStatus = ({ orders, total, totalToday }:Props) => {
+const FeedStatus = ({ orders, total, totalToday }: Props) => {
 
-    const createOrderDashboard = (title:string, filterStatus:string) =>{
-        const ordersChunks = splitChunks(orders.filter(order => order.status === filterStatus),5,2);
+    const createOrderDashboard = (title: string, filterStatus: string) => {
+        const ordersChunks = splitChunks(orders.filter(order => order.status === filterStatus), 5, 2);
         return (
             <div className={styles.StatusDashboard}>
                 <h2 className={`text text_type_main-medium ${styles.FeedTitle}`}>{title}:</h2>
-                {ordersChunks.map((chunk,index) => {
+                {ordersChunks.map((chunk, index) => {
                     return (<div key={`${chunk}_${index}`} className={styles.ColumnOrderNumbers}>
-                        {chunk.map(order=><OrderStatus key={order._id} status={order.status} number={order.number} mix={styles.OrderNumber}/>)}
+                        {chunk.map(order => <OrderStatus key={order._id} status={order.status} number={order.number} mix={styles.OrderNumber} />)}
                     </div>)
                 })}
             </div>
@@ -33,8 +33,8 @@ const FeedStatus = ({ orders, total, totalToday }:Props) => {
     return (
         <div className={styles.FeedStatus}>
             <div className={styles.Dashboard}>
-            {createOrderDashboard('Готовы', ORDER_DONE)}
-            {createOrderDashboard('В работе', ORDER_IN_PROGRESS)}
+                {createOrderDashboard('Готовы', ORDER_DONE)}
+                {createOrderDashboard('В работе', ORDER_IN_PROGRESS)}
             </div>
             <h2 className={`text text_type_main-medium ${styles.FeedTitle}`}>Выполнено за все время:</h2>
             <p className="text text_type_digits-large pb-15">{total}</p>

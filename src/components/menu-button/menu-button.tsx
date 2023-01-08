@@ -1,4 +1,4 @@
-import React, { JSXElementConstructor, MouseEventHandler, ReactElement } from "react";
+import React, { JSXElementConstructor, MouseEventHandler, ReactElement, SyntheticEvent } from "react";
 
 import style from './menu-button.module.css';
 
@@ -6,7 +6,7 @@ type Props = {
     icon: ReactElement<{ type: string; }, string | JSXElementConstructor<any>>;
     text: string;
     type: string;
-    onClick: (e: any)=>MouseEventHandler<Element> | void;
+    onClick: (e: SyntheticEvent)=>MouseEventHandler<Element> | void;
 }
 
 const MenuButton = ({icon, text, type='inactive', onClick}:Props) => {

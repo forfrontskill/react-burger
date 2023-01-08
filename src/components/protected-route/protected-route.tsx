@@ -1,13 +1,10 @@
-import React, { FC } from "react";
-import { Route, Redirect } from 'react-router-dom';
+import React from "react";
+import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { useAuth } from "../../hooks/useAuth";
 
-type TProtectedRoute = {
-  path: string;
-  exact?: boolean;
-};
+type TProtectedRoute = RouteProps & {children?: React.ReactNode};
 
-const ProtectedRoute: FC<TProtectedRoute> = ({ children, ...rest }) => {
+const ProtectedRoute = ({ children, ...rest }: TProtectedRoute) => {
 
   const { user } = useAuth();
 

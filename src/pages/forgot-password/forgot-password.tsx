@@ -1,6 +1,6 @@
 import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useHistory, Redirect } from 'react-router-dom';
-import React, { useCallback } from "react";
+import React, { FormEvent, useCallback } from "react";
 import { passwordResetRequest } from "../../utils/burger-api";
 import Question from "../../components/question/question";
 
@@ -16,7 +16,7 @@ const ForgotPassword = () => {
 
     const history = useHistory();
 
-    const handleSubmit = useCallback((e) => {
+    const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         passwordResetRequest({ email: form.email }).then(res => {
             history.replace({ pathname: '/reset-password' }, { fromForgotPassword: true })

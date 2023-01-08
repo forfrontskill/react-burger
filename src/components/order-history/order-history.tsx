@@ -5,7 +5,6 @@ import OrderCard from "../order-card/order-card";
 import styles from './order-history.module.css';
 import { wsCreatedOrdersConnectionClosed, wsCreatedOrdersConnectionStart } from "../../services/actions/createdOrders";
 import { useDispatch, useSelector } from "../../hooks/hooks";
-import { TOrder } from "../../services/types/data";
 
 const OrderHistory = () => {
 
@@ -35,7 +34,7 @@ const OrderHistory = () => {
 
     return (
         <div className={styles.OrderHistory}>
-            {orders.map((order:TOrder) => <OrderCard key={order._id} order={order} onClick={handleOpenModal} showStatus={true}/>)}
+            {orders.map(order => <OrderCard key={order._id} order={order} onClick={handleOpenModal} showStatus={true}/>)}
         </div>
     )
 }

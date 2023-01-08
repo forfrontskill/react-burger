@@ -1,5 +1,5 @@
 
-import React, { useCallback } from "react";
+import React, { FormEvent, useCallback } from "react";
 import { Redirect, useLocation } from 'react-router-dom';
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import Question from "../../components/question/question";
@@ -15,7 +15,7 @@ const Login = () => {
 
     const { form, handleChange } = useForm({ email: '', password: '' });
 
-    const handleSubmit = useCallback(e => {
+    const handleSubmit = useCallback((e:FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         auth.signIn({ email: form.email, password: form.password });
     }, [form, auth])

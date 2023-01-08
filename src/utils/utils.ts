@@ -56,7 +56,7 @@ export const fillDetailedInformationOrder = (ingredients: readonly string[], des
 
     if (!Array.isArray(ingredients)) return { ingredients: {}, price: 0 };
 
-    return ingredients.reduce<TIngrCountList>((acc, ingr) => {
+    return ingredients.reduce((acc, ingr) => {
         const detIngr = descriptionIngr.find(descIngr => descIngr._id === ingr);
 
         if (detIngr) {

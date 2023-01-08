@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { SyntheticEvent, useCallback } from "react";
 import { useHistory, useLocation } from 'react-router-dom';
 import { BurgerIcon, Logo, MenuIcon, ListIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -20,7 +20,7 @@ const AppHeader = () => {
     const isConstuctor = pathname === PATH_BASE || pathname.includes(PATH_INGREDIENTS) ? 'active' : 'inactive';
 
     const handleProfile = useCallback(
-        (e) => {
+        (e:SyntheticEvent) => {
             e.preventDefault();
             history.push({ pathname: PATH_PROFILE });
         },
@@ -28,7 +28,7 @@ const AppHeader = () => {
     );
 
     const handleForwardMainPage = useCallback(
-        (e) => {
+        (e:SyntheticEvent) => {
             e.preventDefault();
             history.push({ pathname: PATH_BASE });
         },
@@ -36,7 +36,7 @@ const AppHeader = () => {
     );
 
     const handleFeedPage = useCallback(
-        (e) => {
+        (e:SyntheticEvent) => {
             e.preventDefault();
             history.push({ pathname: PATH_FEED });
         },
